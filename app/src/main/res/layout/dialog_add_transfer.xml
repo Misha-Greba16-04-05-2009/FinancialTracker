@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <!-- Счет отправитель -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Со счета:"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_marginBottom="5dp"/>
+
+        <Spinner
+            android:id="@+id/fromAccountSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/rounded_gray"
+            android:popupBackground="#FFFFFF"/>
+
+        <!-- Счет получатель -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="На счет:"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_marginBottom="5dp"/>
+
+        <Spinner
+            android:id="@+id/toAccountSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/rounded_gray"
+            android:popupBackground="#FFFFFF"/>
+
+        <!-- Сумма -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Сумма перевода:"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_marginBottom="5dp"/>
+
+        <EditText
+            android:id="@+id/amountInput"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="numberDecimal"
+            android:hint="Введите сумму"
+            android:padding="12dp"
+            android:layout_marginBottom="15dp"
+            android:textColor="#000000"
+            android:textColorHint="#757575"
+            android:background="@drawable/rounded_gray"/>
+
+        <!-- Комиссия -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Комиссия (опционально):"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_marginBottom="5dp"/>
+
+        <EditText
+            android:id="@+id/commissionInput"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="numberDecimal"
+            android:hint="0.00"
+            android:padding="12dp"
+            android:layout_marginBottom="15dp"
+            android:textColor="#000000"
+            android:textColorHint="#757575"
+            android:background="@drawable/rounded_gray"/>
+
+        <!-- Валюта -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Валюта (опционально):"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_marginBottom="5dp"/>
+
+        <EditText
+            android:id="@+id/currencyInput"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="руб., $, € и т.д."
+            android:padding="12dp"
+            android:layout_marginBottom="15dp"
+            android:textColor="#000000"
+            android:textColorHint="#757575"
+            android:background="@drawable/rounded_gray"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Описание перевода (необязательно):"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_marginBottom="5dp"/>
+
+        <EditText
+            android:id="@+id/descriptionInput"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:inputType="textMultiLine"
+            android:hint="Например: Перевод на ежемесячные расходы"
+            android:padding="12dp"
+            android:gravity="top"
+            android:layout_marginBottom="15dp"
+            android:textColor="#000000"
+            android:textColorHint="#757575"
+            android:background="@drawable/rounded_gray"/>
+
+    </LinearLayout>
+
+</ScrollView>

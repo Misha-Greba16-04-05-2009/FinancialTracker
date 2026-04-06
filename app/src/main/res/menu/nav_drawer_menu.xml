@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="Главная" />
+    
+    <item
+        android:id="@+id/nav_accounts"
+        android:icon="@drawable/ic_accounts"
+        android:title="Управление счетами" />
+    
+    <item
+        android:id="@+id/nav_data"
+        android:icon="@drawable/ic_data"
+        android:title="Данные и записи" />
+    
+    <item
+        android:id="@+id/nav_reports_analytics"
+        android:icon="@drawable/ic_analytics"
+        android:title="Аналитика и отчёты" />
+    
+    <item
+        android:id="@+id/nav_statistics"
+        android:icon="@drawable/ic_statistics"
+        android:title="Статистика" />
+    
+    <item
+        android:id="@+id/nav_budgets"
+        android:icon="@drawable/ic_budget"
+        android:title="Бюджеты" />
+
+    <item
+        android:id="@+id/nav_goals"
+        android:icon="@drawable/ic_goal"
+        android:title="Финансовые цели" />
+        
+    <item
+        android:id="@+id/nav_transfers"
+        android:icon="@drawable/ic_transfer"
+        android:title="Переводы" />
+    
+    <item
+        android:id="@+id/nav_currencies"
+        android:icon="@drawable/ic_currency"
+        android:title="Конвертер валют" />
+    
+    <item
+        android:id="@+id/nav_rate_editor"
+        android:icon="@drawable/ic_edit"
+        android:title="Редактор курсов" />
+    
+    <item android:title="Управление">
+        <menu>
+            <item
+                android:id="@+id/nav_export"
+                android:icon="@drawable/ic_export"
+                android:title="Экспорт данных" />
+            
+            <item
+                android:id="@+id/nav_import"
+                android:icon="@drawable/ic_import"
+                android:title="Импорт данных" />
+            
+            <item
+                android:id="@+id/nav_clear_history"
+                android:icon="@drawable/ic_clear"
+                android:title="Очистка данных" />
+        </menu>
+    </item>
+    
+    <item android:title="Информация">
+        <menu>
+            <item
+                android:id="@+id/nav_info"
+                android:icon="@drawable/ic_info"
+                android:title="ℹО приложении" />
+            
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_help"
+                android:title="Помощь" />
+        </menu>
+    </item>
+
+    <item android:id="@+id/nav_logout"
+        android:icon="@android:drawable/ic_lock_power_off"
+        android:title="Выйти из аккаунта" />
+
+</menu>

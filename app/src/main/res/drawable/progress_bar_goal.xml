@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Фон -->
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="8dp" />
+            <solid android:color="@color/divider_light" />
+        </shape>
+    </item>
+
+    <!-- Вторичный прогресс -->
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <shape>
+                <corners android:radius="8dp" />
+                <solid android:color="@color/primary_light" />
+            </shape>
+        </clip>
+    </item>
+
+    <!-- Основной прогресс -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="8dp" />
+                <solid android:color="@color/goal_progress" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>

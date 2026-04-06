@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ID для элементов меню -->
+    <item name="nav_budgets" type="id"/>
+
+    <!-- ID для элементов BudgetsFragment -->
+    <item name="fabAddBudget" type="id"/>
+    <item name="fabAddGoal" type="id"/>
+</resources>

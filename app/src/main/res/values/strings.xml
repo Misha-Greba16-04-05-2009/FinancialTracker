@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Основные строки -->
+    <string name="app_name">Финансовый трекер</string>
+
+    <!-- Меню -->
+    <string name="nav_budgets">Бюджеты и цели</string>
+
+    <!-- Бюджеты -->
+    <string name="budgets">Бюджеты</string>
+    <string name="saving_goals">Цели накопления</string>
+    <string name="add_budget">Добавить бюджет</string>
+    <string name="add_goal">Добавить цель</string>
+    <string name="edit_budget">Изменить бюджет</string>
+    <string name="delete_budget">Удалить бюджет</string>
+
+    <!-- Сообщения -->
+    <string name="message_no_budgets">Нет активных бюджетов</string>
+    <string name="message_no_goals">Нет целей накопления</string>
+
+    <!-- Кнопки -->
+    <string name="button_save">Сохранить</string>
+    <string name="button_cancel">Отмена</string>
+    <string name="button_delete">Удалить</string>
+    <string name="button_edit">Изменить</string>
+    <string name="button_add">Добавить</string>
+
+    <!-- Диалоги -->
+    <string name="dialog_confirm_delete_budget">Удалить бюджет для категории \"%s\"?</string>
+    <string name="dialog_budget_details">Детали бюджета</string>
+</resources>

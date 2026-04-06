@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Существующие массивы -->
+    <integer-array name="com_google_android_gms_fonts_certs">
+        <item>0</item>
+    </integer-array>
+
+    <string-array name="category_types">
+        <item>Доход</item>
+        <item>Расход</item>
+    </string-array>
+
+    <!-- Новые массивы для бюджетирования -->
+    <string-array name="budget_periods">
+        <item>Недельный</item>
+        <item>Месячный</item>
+        <item>Квартальный</item>
+        <item>Годовой</item>
+        <item>Пользовательский</item>
+    </string-array>
+
+    <string-array name="goal_priorities">
+        <item>Высокий</item>
+        <item>Средний</item>
+        <item>Низкий</item>
+    </string-array>
+
+    <string-array name="period_filters">
+        <item>Все периоды</item>
+        <item>Недельные</item>
+        <item>Месячные</item>
+        <item>Квартальные</item>
+        <item>Годовые</item>
+    </string-array>
+
+    <string-array name="analytics_periods">
+        <item>Этот месяц</item>
+        <item>Прошлый месяц</item>
+        <item>Этот год</item>
+        <item>Прошлый год</item>
+        <item>Последние 30 дней</item>
+        <item>Последние 90 дней</item>
+        <item>Выбрать даты</item>
+    </string-array>
+</resources>

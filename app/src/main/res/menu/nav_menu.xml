@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:title="Главная"
+            android:icon="@drawable/ic_home"/>
+            
+        <item
+            android:id="@+id/nav_data"
+            android:title="Данные и записи"
+            android:icon="@drawable/ic_data"/>
+            
+        <item
+            android:id="@+id/nav_statistics"
+            android:title="Аналитика"
+            android:icon="@drawable/ic_settings"/>
+            
+        <item
+            android:id="@+id/nav_expense_analysis"
+            android:icon="@android:drawable/ic_menu_sort_by_size"
+            android:title="Анализ финансов" />
+
+        <item
+            android:id="@+id/nav_accounts"
+            android:icon="@android:drawable/ic_menu_manage"
+            android:title="Управление счетами" />
+        <item
+            android:id="@+id/nav_transfers"
+            android:icon="@android:drawable/ic_menu_share"
+            android:title="Переводы" />
+    </group>
+
+    <item android:title="⚡ Действия">
+        <menu>
+            <item
+                android:id="@+id/nav_clear_history"
+                android:title="Очистить данные"
+                android:icon="@drawable/ic_clear"/>
+                
+            <item
+                android:id="@+id/nav_export"
+                android:title="Экспорт данных"
+                android:icon="@drawable/ic_export"/>
+                
+            <item
+                android:id="@+id/nav_import"
+                android:title="Импорт данных"
+                android:icon="@drawable/ic_import"/>
+        </menu>
+    </item>
+
+    <item android:title="ℹ️ Информация">
+        <menu>
+            <item
+                android:id="@+id/nav_info"
+                android:title="О приложении"
+                android:icon="@drawable/ic_info"/>
+                
+            <item
+                android:id="@+id/nav_help"
+                android:title="Помощь"
+                android:icon="@drawable/ic_help"/>
+        </menu>
+    </item>
+
+</menu>

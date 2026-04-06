@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/gradient_background">
+
+    <!-- Спиннеры для фильтрации -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <Spinner
+            android:id="@+id/yearSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"/>
+
+        <Spinner
+            android:id="@+id/monthSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <!-- Кнопка добавления категории -->
+    <Button
+        android:id="@+id/addCategoryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="➕ Добавить категорию"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Сводка -->
+    <TextView
+        android:id="@+id/summaryTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📈 АНАЛИЗ ДОХОДОВ\n\nЗагрузка..."
+        android:textSize="14sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/rounded_corner_light"
+        android:padding="15dp"
+        android:layout_marginBottom="16dp"
+        android:lineSpacingExtra="5sp"/>
+
+    <!-- Сообщение при отсутствии данных -->
+    <TextView
+        android:id="@+id/emptyTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Нет доходов за выбранный период"
+        android:textSize="16sp"
+        android:textColor="#B3FFFFFF"
+        android:gravity="center"
+        android:padding="50dp"
+        android:lineSpacingExtra="10sp"
+        android:visibility="gone"/>
+
+    <!-- Контейнер для отображения категорий -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/incomeContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"/>
+
+    </ScrollView>
+
+</LinearLayout>
