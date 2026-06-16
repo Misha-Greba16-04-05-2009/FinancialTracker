@@ -45,7 +45,6 @@ public class CategoryManager {
     public List<String> getIncomeCategories() {
         String json = sharedPreferences.getString(KEY_INCOME_CATEGORIES, "");
         if (json.isEmpty()) {
-            // Возвращаем стандартные категории при первом запуске
             saveIncomeCategories(new ArrayList<>(DEFAULT_INCOME_CATEGORIES));
             return new ArrayList<>(DEFAULT_INCOME_CATEGORIES);
         }
@@ -59,7 +58,6 @@ public class CategoryManager {
     public List<String> getExpenseCategories() {
         String json = sharedPreferences.getString(KEY_EXPENSE_CATEGORIES, "");
         if (json.isEmpty()) {
-            // Возвращаем стандартные категории при первом запуске
             saveExpenseCategories(new ArrayList<>(DEFAULT_EXPENSE_CATEGORIES));
             return new ArrayList<>(DEFAULT_EXPENSE_CATEGORIES);
         }
@@ -87,7 +85,6 @@ public class CategoryManager {
             return false;
         }
 
-        // Добавляем иконку если её нет
         String formattedCategory = category.trim();
         if (!formattedCategory.contains(" ")) {
             formattedCategory = "💰 " + formattedCategory;
@@ -108,7 +105,6 @@ public class CategoryManager {
             return false;
         }
 
-        // Добавляем иконку если её нет
         String formattedCategory = category.trim();
         if (!formattedCategory.contains(" ")) {
             formattedCategory = "💸 " + formattedCategory;
@@ -143,30 +139,90 @@ public class CategoryManager {
         return false;
     }
 
+    // ============ НОВЫЕ МЕТОДЫ ДЛЯ УДАЛЕНИЯ ПО ИМЕНИ ============
+
+    // Удалить категорию доходов по имени (без иконки)
+    public boolean removeIncomeCategoryByName(String categoryName) {
+        List<String> categories = getIncomeCategories();
+        String fullCategory = null;
+
+        for (String cat : categories) {
+            if (getCategoryNameWithoutIcon(cat).equalsIgnoreCase(categoryName)) {
+                fullCategory = cat;
+                break;
+            }
+        }
+
+        if (fullCategory != null && categories.remove(fullCategory)) {
+            saveIncomeCategories(categories);
+            return true;
+        }
+        return false;
+    }
+
+    // Удалить категорию расходов по имени (без иконки)
+    public boolean removeExpenseCategoryByName(String categoryName) {
+        List<String> categories = getExpenseCategories();
+        String fullCategory = null;
+
+        for (String cat : categories) {
+            if (getCategoryNameWithoutIcon(cat).equalsIgnoreCase(categoryName)) {
+                fullCategory = cat;
+                break;
+            }
+        }
+
+        if (fullCategory != null && categories.remove(fullCategory)) {
+            saveExpenseCategories(categories);
+            return true;
+        }
+        return false;
+    }
+
+    // Получить все категории (и доходы и расходы)
+    public List<String> getAllCategories() {
+        List<String> all = new ArrayList<>();
+        all.addAll(getIncomeCategories());
+        all.addAll(getExpenseCategories());
+        return all;
+    }
+
+    // Получить список категорий без иконок для отображения
+    public List<String> getAllCategoryNames() {
+        List<String> names = new ArrayList<>();
+        for (String cat : getAllCategories()) {
+            names.add(getCategoryNameWithoutIcon(cat));
+        }
+        return names;
+    }
+
+    // Вспомогательный метод для получения имени без иконки
+    private String getCategoryNameWithoutIcon(String category) {
+        if (category == null) return "";
+        if (category.contains(" ")) {
+            return category.substring(category.indexOf(" ") + 1);
+        }
+        return category;
+    }
+
     // Получить цвет для категории
     public int getCategoryColor(String category, boolean isIncome) {
-        // Генерируем цвет на основе хэша строки
         return generateColorFromString(category, isIncome);
     }
 
     // Сгенерировать цвет на основе строки
     private int generateColorFromString(String str, boolean isIncome) {
-        int hash = str.hashCode();
-
-        // Используем абсолютное значение хэша
-        hash = Math.abs(hash);
+        int hash = Math.abs(str.hashCode());
 
         if (isIncome) {
-            // Зеленые оттенки для доходов
-            int r = 30 + (hash % 40);      // 30-70
-            int g = 100 + ((hash / 100) % 100); // 100-200
-            int b = 30 + ((hash / 10000) % 40); // 30-70
+            int r = 30 + (hash % 40);
+            int g = 100 + ((hash / 100) % 100);
+            int b = 30 + ((hash / 10000) % 40);
             return Color.rgb(r, g, b);
         } else {
-            // Красно-синие оттенки для расходов
-            int r = 150 + (hash % 100);    // 150-250
-            int g = 30 + ((hash / 100) % 40);  // 30-70
-            int b = 30 + ((hash / 10000) % 40); // 30-70
+            int r = 150 + (hash % 100);
+            int g = 30 + ((hash / 100) % 40);
+            int b = 30 + ((hash / 10000) % 40);
             return Color.rgb(r, g, b);
         }
     }
@@ -182,7 +238,6 @@ public class CategoryManager {
             int transactionYear = calendar.get(Calendar.YEAR);
             int transactionMonth = calendar.get(Calendar.MONTH) + 1;
 
-            // Фильтруем по году и месяцу
             if ((year == -1 || transactionYear == year) &&
                     (month == -1 || transactionMonth == month)) {
 
@@ -203,7 +258,7 @@ public class CategoryManager {
         return stats;
     }
 
-    // Получить статистику по категориям (для StatisticsFragment)
+    // Получить статистику по категориям
     public String getCategoryStatistics(List<Transaction> transactions) {
         Map<String, CategoryStats> incomeStats = getCategoryStats(transactions, -1, -1);
 
@@ -268,7 +323,6 @@ public class CategoryManager {
         }
 
         public String getIcon() {
-            // Извлекаем иконку из категории
             if (category.contains(" ")) {
                 return category.split(" ")[0];
             }
@@ -276,7 +330,6 @@ public class CategoryManager {
         }
 
         public String getNameWithoutIcon() {
-            // Убираем иконку из названия категории
             if (category.contains(" ")) {
                 return category.substring(category.indexOf(" ") + 1);
             }

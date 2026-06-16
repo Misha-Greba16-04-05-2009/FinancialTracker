@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/card_background">
 
     <TextView
         android:id="@+id/dialogTitle"
@@ -12,24 +13,28 @@
         android:text="Добавить бюджет"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="16dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Категория"
+        android:textColor="@color/text_secondary"
         android:layout_marginBottom="4dp"/>
 
     <Spinner
         android:id="@+id/categorySpinner"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:background="@drawable/spinner_background_custom"
         android:layout_marginBottom="16dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Сумма бюджета"
+        android:textColor="@color/text_secondary"
         android:layout_marginBottom="4dp"/>
 
     <EditText
@@ -38,17 +43,22 @@
         android:layout_height="48dp"
         android:inputType="numberDecimal"
         android:hint="Введите сумму"
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_hint"
+        android:background="@drawable/edit_text_background_custom"
         android:layout_marginBottom="16dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Период"
+        android:textColor="@color/text_secondary"
         android:layout_marginBottom="4dp"/>
 
     <Spinner
         android:id="@+id/periodSpinner"
         android:layout_width="match_parent"
-        android:layout_height="48dp"/>
+        android:layout_height="48dp"
+        android:background="@drawable/spinner_background_custom"/>
 
 </LinearLayout>

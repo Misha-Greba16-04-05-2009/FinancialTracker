@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="@color/background">
 
     <!-- Заголовок -->
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#2196F3"
+        android:background="@color/primary_color"
         android:elevation="4dp">
 
         <TextView
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:text="✏️ Редактор курсов"
             android:textSize="20sp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textStyle="bold"/>
 
     </androidx.appcompat.widget.Toolbar>
@@ -30,7 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:cardCornerRadius="12dp"
-        app:cardElevation="4dp">
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/card_background">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="Последнее обновление ЦБ: загрузка..."
                 android:textSize="12sp"
-                android:textColor="#757575"
+                android:textColor="@color/text_hint"
                 android:layout_marginBottom="8dp"/>
 
             <TextView
@@ -53,56 +54,62 @@
                 android:layout_height="wrap_content"
                 android:text="📊 Всего валют: 0\n✏️ Изменено: 0\n📈 Среднее отклонение: 0.00%"
                 android:textSize="14sp"
-                android:textColor="#333333"
+                android:textColor="@color/text_primary"
                 android:lineSpacingExtra="4dp"/>
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Кнопки действий -->
+    <!-- Кнопки действий - одинакового размера с иконками -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingHorizontal="16dp"
-        android:paddingBottom="16dp">
+        android:paddingBottom="16dp"
+        android:gravity="center"
+        android:weightSum="3">
 
         <Button
             android:id="@+id/addCurrencyButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:layout_weight="1"
-            android:text="➕ Добавить"
-            android:textSize="12sp"
+            android:text="➕"
+            android:textSize="20sp"
+            android:textAllCaps="false"
             android:background="@drawable/button_primary"
-            android:textColor="#FFFFFF"
-            android:layout_marginEnd="4dp"/>
+            android:textColor="@color/white"
+            android:layout_marginEnd="4dp"
+            android:tooltipText="Добавить валюту"/>
 
         <Button
             android:id="@+id/resetToOfficialButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:layout_weight="1"
-            android:text="🔄 Сброс к ЦБ"
-            android:textSize="12sp"
+            android:text="🔄"
+            android:textSize="20sp"
+            android:textAllCaps="false"
             android:background="@drawable/button_orange"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"/>
+            android:layout_marginEnd="4dp"
+            android:tooltipText="Сбросить все курсы к официальным курсам ЦБ"/>
 
         <Button
             android:id="@+id/saveAllButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:layout_weight="1"
-            android:text="💾 Сохранить"
-            android:textSize="12sp"
+            android:text="💾"
+            android:textSize="20sp"
+            android:textAllCaps="false"
             android:background="@drawable/button_success"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:layout_marginStart="4dp"
-            android:enabled="false"
-            android:alpha="0.5"/>
+            android:tooltipText="Сохранить все изменения"/>
 
     </LinearLayout>
 

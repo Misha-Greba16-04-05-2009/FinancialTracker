@@ -3,31 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/card_background">
 
-    <!-- Категория -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Категория:"
         android:textSize="16sp"
-        android:textColor="#000000"
+        android:textColor="@color/text_secondary"
         android:layout_marginBottom="8dp"/>
 
     <Spinner
         android:id="@+id/categorySpinner"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/rounded_gray"/>
+        android:background="@drawable/spinner_background_custom"
+        android:layout_marginBottom="16dp"/>
 
-    <!-- Сумма -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Сумма (руб.):"
         android:textSize="16sp"
-        android:textColor="#000000"
+        android:textColor="@color/text_secondary"
         android:layout_marginBottom="8dp"/>
 
     <EditText
@@ -36,9 +35,9 @@
         android:layout_height="50dp"
         android:inputType="numberDecimal"
         android:hint="Введите сумму"
-        android:padding="12dp"
-        android:textColor="#000000"
-        android:textColorHint="#757575"
-        android:background="@drawable/rounded_gray"/>
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_hint"
+        android:background="@drawable/edit_text_background_custom"
+        android:padding="12dp"/>
 
 </LinearLayout>

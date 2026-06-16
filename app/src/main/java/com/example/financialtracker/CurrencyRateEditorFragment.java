@@ -38,12 +38,10 @@ public class CurrencyRateEditorFragment extends Fragment implements CbrRateManag
     private TextView statsText;
     private CardView statsCard;
 
-    // ТОЛЬКО 4 ВАЛЮТЫ (плюс RUB базовая)
     private List<EditableCurrency> currencies = new ArrayList<>();
     private CurrencyEditorAdapter adapter;
     private boolean hasChanges = false;
 
-    // Массивы только для нужных валют
     private static final String[] CURRENCY_CODES = {
             "USD", "EUR", "CNY", "AED"
     };
@@ -67,7 +65,6 @@ public class CurrencyRateEditorFragment extends Fragment implements CbrRateManag
             return view;
         }
 
-        // ПОЛУЧАЕМ rateManager ИЗ MainActivity
         rateManager = mainActivity.getRateManager();
         rateManager.addListener(this);
 
@@ -97,7 +94,6 @@ public class CurrencyRateEditorFragment extends Fragment implements CbrRateManag
 
         currenciesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Скрываем кнопку добавления (она не нужна)
         View addButton = view.findViewById(R.id.addCurrencyButton);
         if (addButton != null) {
             addButton.setVisibility(View.GONE);
@@ -120,7 +116,6 @@ public class CurrencyRateEditorFragment extends Fragment implements CbrRateManag
     private void loadCurrencies() {
         currencies.clear();
 
-        // Загружаем только 4 валюты
         for (int i = 0; i < CURRENCY_CODES.length; i++) {
             String code = CURRENCY_CODES[i];
             double rate = rateManager.getRate(code);
@@ -139,7 +134,6 @@ public class CurrencyRateEditorFragment extends Fragment implements CbrRateManag
 
             @Override
             public void onDeleteCurrency(String currencyCode) {
-                // Не даём удалять валюты
                 Toast.makeText(getContext(), "Эту валюту нельзя удалить", Toast.LENGTH_SHORT).show();
             }
         });
@@ -209,8 +203,6 @@ public class CurrencyRateEditorFragment extends Fragment implements CbrRateManag
         }
     }
 
-    // ============ ВСПОМОГАТЕЛЬНЫЙ КЛАСС ============
-
     private static class EditableCurrency {
         String code;
         String name;
@@ -245,14 +237,10 @@ public class CurrencyRateEditorFragment extends Fragment implements CbrRateManag
         }
     }
 
-    // ============ ИНТЕРФЕЙС СЛУШАТЕЛЯ ============
-
     private interface CurrencyEditorListener {
         void onRateChanged(String currencyCode, double newRate);
         void onDeleteCurrency(String currencyCode);
     }
-
-    // ============ АДАПТЕР ============
 
     private class CurrencyEditorAdapter extends RecyclerView.Adapter<CurrencyEditorAdapter.ViewHolder> {
 
@@ -286,7 +274,6 @@ public class CurrencyRateEditorFragment extends Fragment implements CbrRateManag
             holder.deviationText.setText(item.getDeviationText());
             holder.deviationText.setTextColor(item.getDeviationColor());
 
-            // Удаляем предыдущий TextWatcher
             if (holder.textWatcher != null) {
                 holder.rateEdit.removeTextChangedListener(holder.textWatcher);
             }
@@ -317,7 +304,6 @@ public class CurrencyRateEditorFragment extends Fragment implements CbrRateManag
 
             holder.rateEdit.addTextChangedListener(holder.textWatcher);
 
-            // Скрываем кнопку удаления
             holder.deleteButton.setVisibility(View.GONE);
 
             holder.resetButton.setOnClickListener(v -> {

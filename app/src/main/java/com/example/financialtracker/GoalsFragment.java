@@ -82,7 +82,6 @@ public class GoalsFragment extends Fragment {
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         filterSpinner = view.findViewById(R.id.filterSpinner);
 
-        // Настройка фильтра
         String[] filters = {"Все", "Активные", "Выполненные", "Просроченные", "По приоритету"};
         ArrayAdapter<String> filterAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, filters);
@@ -165,7 +164,6 @@ public class GoalsFragment extends Fragment {
 
         filtered.sort((g1, g2) -> {
             if (currentFilter.equals("По приоритету")) {
-                // Сортировка по приоритету
                 int priority1 = getPriorityLevel(g1.getPriority());
                 int priority2 = getPriorityLevel(g2.getPriority());
                 return Integer.compare(priority2, priority1);
@@ -231,7 +229,6 @@ public class GoalsFragment extends Fragment {
         goalLayout.setBackgroundResource(R.drawable.card_background);
         goalLayout.setClickable(true);
 
-        // Верхняя строка: название и приоритет
         LinearLayout topRow = new LinearLayout(getContext());
         topRow.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -259,7 +256,6 @@ public class GoalsFragment extends Fragment {
         topRow.addView(nameView);
         topRow.addView(priorityView);
 
-        // Вторая строка: суммы
         LinearLayout amountRow = new LinearLayout(getContext());
         amountRow.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -307,7 +303,6 @@ public class GoalsFragment extends Fragment {
         amountRow.addView(targetView);
         amountRow.addView(percentageView);
 
-        // Прогресс-бар
         LinearLayout progressContainer = new LinearLayout(getContext());
         progressContainer.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -328,7 +323,6 @@ public class GoalsFragment extends Fragment {
 
         progressContainer.addView(progressBar);
 
-        // Нижняя строка: срок и статус
         LinearLayout bottomRow = new LinearLayout(getContext());
         bottomRow.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -452,7 +446,6 @@ public class GoalsFragment extends Fragment {
                 .show();
     }
 
-
     private void confirmDeleteGoal(final FinancialGoal goal) {
         new AlertDialog.Builder(getContext())
                 .setTitle("❌ Удалить цель")
@@ -532,25 +525,21 @@ public class GoalsFragment extends Fragment {
         final LinearLayout deadlineLayout = dialogView.findViewById(R.id.deadlineLayout);
         final TextView deadlineTextView = dialogView.findViewById(R.id.deadlineTextView);
 
-        // Заполняем текущими значениями
         nameInput.setText(goal.getName());
         targetAmountInput.setText(String.valueOf(goal.getTargetAmount()));
         currentAmountInput.setText(String.valueOf(goal.getCurrentAmount()));
         notesInput.setText(goal.getNotes());
 
-        // Устанавливаем дату
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         final Date[] selectedDeadline = {goal.getDeadline()};
         deadlineTextView.setText(sdf.format(selectedDeadline[0]));
 
-        // Настраиваем спиннер приоритета
         String[] priorities = {"Низкий", "Средний", "Высокий", "Критический"};
         ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, priorities);
         priorityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         prioritySpinner.setAdapter(priorityAdapter);
 
-        // Устанавливаем текущий приоритет
         for (int i = 0; i < priorities.length; i++) {
             if (priorities[i].equals(goal.getPriority())) {
                 prioritySpinner.setSelection(i);
@@ -558,7 +547,6 @@ public class GoalsFragment extends Fragment {
             }
         }
 
-        // Обработчик выбора даты
         deadlineLayout.setOnClickListener(v -> {
             Calendar cal = Calendar.getInstance();
             cal.setTime(selectedDeadline[0]);
@@ -650,14 +638,12 @@ public class GoalsFragment extends Fragment {
         final LinearLayout deadlineLayout = dialogView.findViewById(R.id.deadlineLayout);
         final TextView deadlineTextView = dialogView.findViewById(R.id.deadlineTextView);
 
-        // Устанавливаем текущую дату + 30 дней
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, 30);
         final Date[] selectedDeadline = {calendar.getTime()};
         deadlineTextView.setText(sdf.format(selectedDeadline[0]));
 
-        // Обработчик выбора даты
         deadlineLayout.setOnClickListener(v -> {
             Calendar cal = Calendar.getInstance();
             cal.setTime(selectedDeadline[0]);
@@ -676,7 +662,6 @@ public class GoalsFragment extends Fragment {
             datePickerDialog.show();
         });
 
-        // Настраиваем спиннер приоритета
         String[] priorities = {"Низкий", "Средний", "Высокий", "Критический"};
         ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, priorities);

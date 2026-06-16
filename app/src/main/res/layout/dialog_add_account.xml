@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/card_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +15,7 @@
             android:layout_height="wrap_content"
             android:text="Название счета *"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <EditText
@@ -23,6 +24,10 @@
             android:layout_height="wrap_content"
             android:hint="Например: Основная карта"
             android:inputType="text"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            android:background="@drawable/edit_text_background_custom"
+            android:padding="12dp"
             android:layout_marginBottom="16dp"/>
 
         <TextView
@@ -30,7 +35,7 @@
             android:layout_height="wrap_content"
             android:text="Начальный баланс"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <EditText
@@ -39,6 +44,10 @@
             android:layout_height="wrap_content"
             android:hint="0.00"
             android:inputType="numberDecimal"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            android:background="@drawable/edit_text_background_custom"
+            android:padding="12dp"
             android:layout_marginBottom="16dp"/>
 
         <TextView
@@ -46,27 +55,30 @@
             android:layout_height="wrap_content"
             android:text="Валюта счета *"
             android:textSize="14sp"
-            android:textColor="#333333"
-            android:layout_marginBottom="4dp"/>
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="4dp"
+            android:visibility="gone"/>
 
         <Spinner
             android:id="@+id/currencySpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Тип счета"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <Spinner
             android:id="@+id/typeSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/spinner_background_custom"
             android:layout_marginBottom="16dp"/>
 
         <TextView
@@ -74,13 +86,14 @@
             android:layout_height="wrap_content"
             android:text="Тип платежа"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <Spinner
             android:id="@+id/paymentTypeSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/spinner_background_custom"
             android:layout_marginBottom="16dp"/>
 
         <TextView
@@ -88,7 +101,7 @@
             android:layout_height="wrap_content"
             android:text="Дата создания"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <LinearLayout
@@ -108,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:text="Выберите дату"
                 android:textSize="14sp"
-                android:textColor="#333333"/>
+                android:textColor="@color/text_primary"/>
         </LinearLayout>
 
         <TextView
@@ -116,7 +129,7 @@
             android:layout_height="wrap_content"
             android:text="Описание (необязательно)"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <EditText
@@ -126,6 +139,10 @@
             android:hint="Краткое описание счета"
             android:inputType="textMultiLine"
             android:minLines="2"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            android:background="@drawable/edit_text_background_custom"
+            android:padding="12dp"
             android:layout_marginBottom="16dp"/>
 
         <CheckBox
@@ -133,6 +150,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Учитывать в общем балансе"
+            android:textColor="@color/text_primary"
             android:checked="true"
             android:layout_marginBottom="8dp"/>
 
@@ -141,7 +159,7 @@
             android:layout_height="wrap_content"
             android:text="* - обязательные поля"
             android:textSize="12sp"
-            android:textColor="#666666"
+            android:textColor="@color/text_hint"
             android:layout_marginBottom="8dp"/>
 
     </LinearLayout>

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5"
+    android:background="@color/background"
     android:padding="16dp">
 
     <ScrollView
@@ -23,9 +23,9 @@
                 android:layout_height="40dp"
                 android:src="@drawable/ic_arrow_back"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:contentDescription="Назад"/>
+                android:contentDescription="Назад"
+                android:tint="@color/primary_color"
+                android:layout_marginBottom="16dp"/>
 
             <!-- Заголовок -->
             <TextView
@@ -34,7 +34,7 @@
                 android:text="Регистрация"
                 android:textSize="28sp"
                 android:textStyle="bold"
-                android:textColor="#2196F3"
+                android:textColor="@color/primary_color"
                 android:gravity="center"
                 android:layout_marginBottom="24dp"/>
 
@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/card_background"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -58,17 +59,16 @@
                         android:layout_height="wrap_content"
                         android:text="Имя пользователя"
                         android:textSize="14sp"
-                        android:textColor="#666666"
+                        android:textColor="@color/text_secondary"
                         android:layout_marginBottom="4dp"/>
 
                     <EditText
                         android:id="@+id/usernameEditText"
+                        style="@style/CustomEditTextStyle"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="wrap_content"
                         android:hint="Введите имя пользователя"
                         android:inputType="text"
-                        android:background="@drawable/spinner_background"
-                        android:padding="12dp"
                         android:layout_marginBottom="16dp"/>
 
                     <!-- Полное имя -->
@@ -77,17 +77,16 @@
                         android:layout_height="wrap_content"
                         android:text="Полное имя"
                         android:textSize="14sp"
-                        android:textColor="#666666"
+                        android:textColor="@color/text_secondary"
                         android:layout_marginBottom="4dp"/>
 
                     <EditText
                         android:id="@+id/fullNameEditText"
+                        style="@style/CustomEditTextStyle"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="wrap_content"
                         android:hint="Введите полное имя"
                         android:inputType="text"
-                        android:background="@drawable/spinner_background"
-                        android:padding="12dp"
                         android:layout_marginBottom="16dp"/>
 
                     <!-- Email -->
@@ -96,17 +95,16 @@
                         android:layout_height="wrap_content"
                         android:text="Email"
                         android:textSize="14sp"
-                        android:textColor="#666666"
+                        android:textColor="@color/text_secondary"
                         android:layout_marginBottom="4dp"/>
 
                     <EditText
                         android:id="@+id/emailEditText"
+                        style="@style/CustomEditTextStyle"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="wrap_content"
                         android:hint="Введите email"
                         android:inputType="textEmailAddress"
-                        android:background="@drawable/spinner_background"
-                        android:padding="12dp"
                         android:layout_marginBottom="16dp"/>
 
                     <!-- Пароль -->
@@ -115,17 +113,16 @@
                         android:layout_height="wrap_content"
                         android:text="Пароль"
                         android:textSize="14sp"
-                        android:textColor="#666666"
+                        android:textColor="@color/text_secondary"
                         android:layout_marginBottom="4dp"/>
 
                     <EditText
                         android:id="@+id/passwordEditText"
+                        style="@style/CustomEditTextStyle"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="wrap_content"
                         android:hint="Введите пароль"
                         android:inputType="textPassword"
-                        android:background="@drawable/spinner_background"
-                        android:padding="12dp"
                         android:layout_marginBottom="16dp"/>
 
                     <!-- Подтверждение пароля -->
@@ -134,17 +131,16 @@
                         android:layout_height="wrap_content"
                         android:text="Подтверждение пароля"
                         android:textSize="14sp"
-                        android:textColor="#666666"
+                        android:textColor="@color/text_secondary"
                         android:layout_marginBottom="4dp"/>
 
                     <EditText
                         android:id="@+id/confirmPasswordEditText"
+                        style="@style/CustomEditTextStyle"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="wrap_content"
                         android:hint="Повторите пароль"
                         android:inputType="textPassword"
-                        android:background="@drawable/spinner_background"
-                        android:padding="12dp"
                         android:layout_marginBottom="16dp"/>
 
                     <!-- Согласие с условиями -->
@@ -153,6 +149,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Я принимаю условия использования"
+                        android:textColor="@color/text_primary"
                         android:layout_marginBottom="20dp"/>
 
                     <!-- Кнопка регистрации -->
@@ -177,14 +174,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Уже есть аккаунт? "
-                            android:textColor="#757575"/>
+                            android:textColor="@color/text_secondary"/>
 
                         <TextView
                             android:id="@+id/loginLink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Войти"
-                            android:textColor="#2196F3"
+                            android:textColor="@color/primary_color"
                             android:textStyle="bold"
                             android:clickable="true"
                             android:focusable="true"/>

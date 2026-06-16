@@ -12,7 +12,7 @@
         android:text="$ USD"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="#333333"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="4dp"/>
 
     <LinearLayout
@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:text="1 USD = 77.19 RUB"
             android:textSize="14sp"
-            android:textColor="#2196F3"/>
+            android:textColor="@color/primary_color"/>
 
         <TextView
             android:id="@+id/rateFromRubText"
@@ -37,14 +37,14 @@
             android:layout_weight="1"
             android:text="1 RUB = 0.0130 USD"
             android:textSize="14sp"
-            android:textColor="#4CAF50"
+            android:textColor="@color/success_color"
             android:gravity="end"/>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#E0E0E0"
+        android:background="@color/divider_light"
         android:layout_marginTop="8dp"/>
 
 </LinearLayout>

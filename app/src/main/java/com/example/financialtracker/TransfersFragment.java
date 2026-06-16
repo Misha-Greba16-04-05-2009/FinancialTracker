@@ -1,7 +1,6 @@
 package com.example.financialtracker;
 
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,7 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -78,11 +75,15 @@ public class TransfersFragment extends Fragment {
         emptyStateText = view.findViewById(R.id.emptyStateText);
         loadingLayout = view.findViewById(R.id.loadingLayout);
 
-        transfersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        if (transfersRecyclerView != null) {
+            transfersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
     }
 
     private void setupListeners() {
-        newTransferButton.setOnClickListener(v -> showNewTransferDialog());
+        if (newTransferButton != null) {
+            newTransferButton.setOnClickListener(v -> showNewTransferDialog());
+        }
     }
 
     private void loadTransfers() {
@@ -103,11 +104,19 @@ public class TransfersFragment extends Fragment {
         }
 
         if (transfers.isEmpty()) {
-            emptyStateText.setVisibility(View.VISIBLE);
-            transfersRecyclerView.setVisibility(View.GONE);
+            if (emptyStateText != null) {
+                emptyStateText.setVisibility(View.VISIBLE);
+            }
+            if (transfersRecyclerView != null) {
+                transfersRecyclerView.setVisibility(View.GONE);
+            }
         } else {
-            emptyStateText.setVisibility(View.GONE);
-            transfersRecyclerView.setVisibility(View.VISIBLE);
+            if (emptyStateText != null) {
+                emptyStateText.setVisibility(View.GONE);
+            }
+            if (transfersRecyclerView != null) {
+                transfersRecyclerView.setVisibility(View.VISIBLE);
+            }
 
             // Сортируем по дате (сначала новые)
             Collections.sort(transfers, (t1, t2) -> t2.getDate().compareTo(t1.getDate()));
@@ -124,14 +133,16 @@ public class TransfersFragment extends Fragment {
                 }
             });
 
-            transfersRecyclerView.setAdapter(adapter);
+            if (transfersRecyclerView != null) {
+                transfersRecyclerView.setAdapter(adapter);
+            }
         }
     }
 
     private void showNewTransferDialog() {
         if (getContext() == null || dataManager == null) return;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomAlertDialogStyle);
         builder.setTitle("💸 Новый перевод");
 
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_transfer, null);
@@ -145,12 +156,6 @@ public class TransfersFragment extends Fragment {
         TextView dateTextView = dialogView.findViewById(R.id.dateTextView);
         Button convertButton = dialogView.findViewById(R.id.convertButton);
         EditText commissionEditText = dialogView.findViewById(R.id.commissionEditText);
-
-        // Скрываем ненужные элементы конвертации
-        TextView convertedAmountText = dialogView.findViewById(R.id.convertedAmountText);
-        TextView rateInfoText = dialogView.findViewById(R.id.rateInfoText);
-        if (convertedAmountText != null) convertedAmountText.setVisibility(View.GONE);
-        if (rateInfoText != null) rateInfoText.setVisibility(View.GONE);
 
         // Загружаем счета
         List<Account> accounts = dataManager.loadAccounts();
@@ -257,7 +262,9 @@ public class TransfersFragment extends Fragment {
                 dataManager.addTransfer(transfer);
 
                 loadTransfers();
-                mainActivity.updateNavHeader();
+                if (mainActivity != null) {
+                    mainActivity.updateNavHeader();
+                }
 
                 String message = String.format(Locale.getDefault(),
                         "✅ Перевод выполнен\n%.2f ₽", amount);
@@ -283,7 +290,7 @@ public class TransfersFragment extends Fragment {
     private void showTransferDetails(Transfer transfer) {
         if (getContext() == null) return;
 
-        new AlertDialog.Builder(getContext())
+        new AlertDialog.Builder(getContext(), R.style.CustomAlertDialogStyle)
                 .setTitle("Перевод")
                 .setMessage(transfer.getFullDescription())
                 .setPositiveButton("OK", null)
@@ -294,7 +301,7 @@ public class TransfersFragment extends Fragment {
     private void confirmDeleteTransfer(final Transfer transfer) {
         if (getContext() == null || dataManager == null) return;
 
-        new AlertDialog.Builder(getContext())
+        new AlertDialog.Builder(getContext(), R.style.CustomAlertDialogStyle)
                 .setTitle("Удаление перевода")
                 .setMessage("Вы уверены, что хотите удалить этот перевод?\n\n" +
                         "Балансы счетов НЕ будут восстановлены!")
@@ -303,7 +310,9 @@ public class TransfersFragment extends Fragment {
                     transfers.remove(transfer);
                     dataManager.saveTransfers(transfers);
                     loadTransfers();
-                    mainActivity.updateNavHeader();
+                    if (mainActivity != null) {
+                        mainActivity.updateNavHeader();
+                    }
                     Toast.makeText(getContext(), "Перевод удален", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Отмена", null)
@@ -343,15 +352,10 @@ public class TransfersFragment extends Fragment {
 
             holder.fromText.setText("📤 " + t.getFromAccount());
             holder.toText.setText("📥 " + t.getToAccount());
-
-            // ============ ИСПРАВЛЕННОЕ ОТОБРАЖЕНИЕ СУММЫ ============
-            // Используем getFormattedAmount() который возвращает "X.XX руб."
             holder.amountText.setText(t.getFormattedAmount());
-
             holder.dateText.setText(t.getFormattedDateShort());
 
             holder.itemView.setOnClickListener(v -> listener.onTransferClick(t));
-
             holder.deleteButton.setOnClickListener(v -> listener.onDeleteTransfer(t));
         }
 

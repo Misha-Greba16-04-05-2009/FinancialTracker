@@ -88,8 +88,6 @@ public class ReportsAndAnalyticsFragment extends Fragment {
         ).attach();
     }
 
-    // ============ АДАПТЕР ДЛЯ ВКЛАДОК ============
-
     private static class ReportsPagerAdapter extends FragmentStateAdapter {
 
         public ReportsPagerAdapter(@NonNull Fragment fragment) {
@@ -101,7 +99,7 @@ public class ReportsAndAnalyticsFragment extends Fragment {
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return new AnalyticsPieChartsFragment(); // Новый фрагмент с диаграммами
+                    return new AnalyticsPieChartsFragment();
                 case 1:
                     return new ExpenseAnalysisFragment();
                 case 2:
@@ -118,8 +116,6 @@ public class ReportsAndAnalyticsFragment extends Fragment {
             return 4;
         }
     }
-
-    // ============ ФРАГМЕНТ ОБЗОРА АНАЛИТИКИ ============
 
     public static class AnalyticsOverviewFragment extends Fragment {
 
@@ -175,7 +171,6 @@ public class ReportsAndAnalyticsFragment extends Fragment {
             List<Transaction> allTransactions = mainActivity.getTransactions();
             List<Transaction> monthTransactions = new ArrayList<>();
 
-            // Фильтруем транзакции за текущий месяц
             for (Transaction transaction : allTransactions) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(transaction.getDate());
@@ -187,7 +182,6 @@ public class ReportsAndAnalyticsFragment extends Fragment {
                 }
             }
 
-            // Считаем доходы и расходы
             double totalIncome = 0;
             double totalExpense = 0;
 
@@ -213,7 +207,6 @@ public class ReportsAndAnalyticsFragment extends Fragment {
             balanceValue.setTextColor(balance >= 0 ?
                     Color.parseColor("#4CAF50") : Color.parseColor("#F44336"));
 
-            // Добавляем инсайты
             insightsContainer.removeAllViews();
             addInsight("📊 Всего операций: " + monthTransactions.size());
 
@@ -245,8 +238,6 @@ public class ReportsAndAnalyticsFragment extends Fragment {
             insightsContainer.addView(insightView);
         }
     }
-
-    // ============ ФРАГМЕНТ ОТЧЁТОВ ============
 
     public static class ReportsFragment extends Fragment {
 
@@ -418,7 +409,6 @@ public class ReportsAndAnalyticsFragment extends Fragment {
             StringBuilder report = new StringBuilder();
             report.append("📊 ОТЧЁТ ПО КАТЕГОРИЯМ\n\n");
 
-            // Доходы по категориям
             report.append("📈 ДОХОДЫ:\n");
             java.util.Map<String, Double> incomeByCategory = new java.util.HashMap<>();
             double totalIncome = 0;
@@ -439,7 +429,6 @@ public class ReportsAndAnalyticsFragment extends Fragment {
                         entry.getKey(), entry.getValue(), percent));
             }
 
-            // Расходы по категориям
             report.append("\n📉 РАСХОДЫ:\n");
             java.util.Map<String, Double> expenseByCategory = new java.util.HashMap<>();
             double totalExpense = 0;

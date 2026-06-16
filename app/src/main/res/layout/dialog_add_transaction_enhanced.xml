@@ -17,38 +17,41 @@
             android:text="📈 Добавить доход"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#333333"
+            android:textColor="@color/text_primary"
             android:gravity="center"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Тип транзакции -->
+        <!-- Тип транзакции (Доход/Расход) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:weightSum="2">
 
             <Button
                 android:id="@+id/incomeTypeButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:text="📈 Доход"
                 android:textSize="14sp"
+                android:textAllCaps="false"
                 android:layout_marginEnd="4dp"
                 android:background="@drawable/button_type_selected"
-                android:textColor="#FFFFFF"/>
+                android:textColor="@color/white"/>
 
             <Button
                 android:id="@+id/expenseTypeButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:text="📉 Расход"
                 android:textSize="14sp"
+                android:textAllCaps="false"
                 android:layout_marginStart="4dp"
                 android:background="@drawable/button_type_unselected"
-                android:textColor="#000000"/>
+                android:textColor="@color/text_primary"/>
         </LinearLayout>
 
         <!-- Счет -->
@@ -57,13 +60,14 @@
             android:layout_height="wrap_content"
             android:text="Счет"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <Spinner
             android:id="@+id/accountSpinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:background="@drawable/spinner_background_custom"
             android:layout_marginBottom="16dp"/>
 
         <!-- Категория -->
@@ -72,13 +76,14 @@
             android:layout_height="wrap_content"
             android:text="Категория"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <Spinner
             android:id="@+id/categorySpinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:background="@drawable/spinner_background_custom"
             android:layout_marginBottom="8dp"/>
 
         <EditText
@@ -86,6 +91,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Название новой категории"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            android:background="@drawable/edit_text_background_custom"
+            android:padding="12dp"
             android:visibility="gone"
             android:layout_marginBottom="16dp"/>
 
@@ -95,7 +104,7 @@
             android:layout_height="wrap_content"
             android:text="Сумма"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <LinearLayout
@@ -107,68 +116,79 @@
             <EditText
                 android:id="@+id/amountEditText"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:hint="0.00"
                 android:inputType="numberDecimal"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_hint"
+                android:background="@drawable/edit_text_background_custom"
+                android:padding="12dp"
                 android:layout_marginEnd="8dp"/>
 
-            <!-- ДОБАВЛЕН ВЫБОР ВАЛЮТЫ -->
             <Spinner
                 android:id="@+id/currencySpinner"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="80dp"/>
+                android:layout_height="48dp"
+                android:minWidth="80dp"
+                android:background="@drawable/spinner_background_custom"/>
         </LinearLayout>
 
-        <!-- Тип средства -->
+        <!-- Тип средства - ИСПРАВЛЕННЫЙ БЛОК (кнопки одинакового размера) -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Тип средства"
             android:textSize="14sp"
-            android:textColor="#333333"
-            android:layout_marginBottom="4dp"/>
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="8dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:weightSum="3">
 
             <Button
                 android:id="@+id/cashButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="💵 Наличные"
-                android:textSize="12sp"
+                android:text="💵"
+                android:textSize="20sp"
+                android:textAllCaps="false"
                 android:layout_marginEnd="4dp"
                 android:background="@drawable/button_payment_unselected"
-                android:textColor="#000000"/>
+                android:textColor="@color/text_primary"
+                android:tooltipText="Наличные"/>
 
             <Button
                 android:id="@+id/cardButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="💳 Карта"
-                android:textSize="12sp"
+                android:text="💳"
+                android:textSize="20sp"
+                android:textAllCaps="false"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:background="@drawable/button_payment_card_selected"
-                android:textColor="#FFFFFF"/>
+                android:textColor="@color/white"
+                android:tooltipText="Карта"/>
 
             <Button
                 android:id="@+id/electronicButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="📱 Электронные"
-                android:textSize="12sp"
+                android:text="📱"
+                android:textSize="20sp"
+                android:textAllCaps="false"
                 android:layout_marginStart="4dp"
                 android:background="@drawable/button_payment_unselected"
-                android:textColor="#000000"/>
+                android:textColor="@color/text_primary"
+                android:tooltipText="Электронные деньги"/>
         </LinearLayout>
 
         <!-- Дата -->
@@ -177,7 +197,7 @@
             android:layout_height="wrap_content"
             android:text="Дата"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <LinearLayout
@@ -197,7 +217,7 @@
                 android:layout_height="wrap_content"
                 android:text="📅 Выберите дату"
                 android:textSize="14sp"
-                android:textColor="#333333"/>
+                android:textColor="@color/text_primary"/>
         </LinearLayout>
 
         <!-- Описание -->
@@ -206,7 +226,7 @@
             android:layout_height="wrap_content"
             android:text="Описание (необязательно)"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <EditText
@@ -216,6 +236,10 @@
             android:hint="Краткое описание"
             android:inputType="textMultiLine"
             android:minLines="2"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            android:background="@drawable/edit_text_background_custom"
+            android:padding="12dp"
             android:layout_marginBottom="8dp"/>
 
         <TextView
@@ -224,7 +248,7 @@
             android:layout_height="wrap_content"
             android:text="📊 У вас 0 доходов на сумму 0.00 руб."
             android:textSize="12sp"
-            android:textColor="#757575"
+            android:textColor="@color/text_hint"
             android:gravity="center"
             android:padding="10dp"/>
 

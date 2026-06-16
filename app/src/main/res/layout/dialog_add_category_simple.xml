@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="Введите название категории:"
         android:textSize="16sp"
-        android:textColor="#424242"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="16dp"/>
 
     <EditText
@@ -19,7 +19,9 @@
         android:layout_height="wrap_content"
         android:hint="Например: Кафе, Спорт, Образование"
         android:inputType="text"
-        android:padding="16dp"
-        android:background="@drawable/edit_text_background"/>
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_hint"
+        android:background="@drawable/edit_text_background_custom"
+        android:padding="16dp"/>
 
 </LinearLayout>

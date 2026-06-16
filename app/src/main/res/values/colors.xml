@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary_dark_color">#1976D2</color>
-    <color name="gray">#9E9E9E</color>
-    <color name="error_red">#FF5252</color>
-    <color name="success_green">#4CAF50</color>
-    <color name="warning_orange">#FF9800</color>
-    <!-- Основные цвета Material Design -->
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
+    <!-- Базовые цвета -->
     <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
 
     <!-- Основные цвета приложения -->
     <color name="primary_color">#2196F3</color>
     <color name="primary_dark">#1976D2</color>
-    <color name="primary_light">#64B5F6</color> <!-- Добавлено -->
+    <color name="primary_light">#64B5F6</color>
     <color name="secondary_color">#757575</color>
     <color name="accent_color">#FF4081</color>
 
@@ -26,66 +16,61 @@
     <color name="expense_color">#F44336</color>
     <color name="success_color">#4CAF50</color>
     <color name="error_color">#F44336</color>
-
-    <!-- Цвета для бюджетирования -->
-    <color name="budget_color">#FF9800</color> <!-- Оранжевый для бюджетов -->
-    <color name="goal_color">#2196F3</color> <!-- Синий для целей -->
-    <color name="budget_safe">#4CAF50</color> <!-- Зеленый - в пределах -->
-    <color name="budget_warning">#FF9800</color> <!-- Оранжевый - почти превышен -->
-    <color name="budget_danger">#F44336</color> <!-- Красный - превышен -->
-    <color name="goal_progress">#4CAF50</color> <!-- Зеленый прогресс цели -->
-    <color name="goal_overdue">#F44336</color> <!-- Красный - просрочено -->
-    <color name="group_goal_color">#9C27B0</color> <!-- Фиолетовый для групповых целей -->
-
-    <!-- Приоритеты -->
-    <color name="priority_high">#F44336</color> <!-- Красный - высокий -->
-    <color name="priority_medium">#FF9800</color> <!-- Оранжевый - средний -->
-    <color name="priority_low">#4CAF50</color> <!-- Зеленый - низкий -->
-
-    <!-- Периоды -->
-    <color name="period_weekly">#00BCD4</color> <!-- Голубой - неделя -->
-    <color name="period_monthly">#2196F3</color> <!-- Синий - месяц -->
-    <color name="period_quarterly">#3F51B5</color> <!-- Индиго - квартал -->
-    <color name="period_yearly">#673AB7</color> <!-- Глубокий фиолетовый - год -->
-
-    <!-- Градиентные цвета -->
-    <color name="gradient_start">#2196F3</color> <!-- Синий начало -->
-    <color name="gradient_mid">#1976D2</color>  <!-- Синий середина -->
-    <color name="gradient_green_start">#43A047</color> <!-- Зеленый начало -->
-    <color name="gradient_green_end">#2E7D32</color>   <!-- Зеленый конец -->
-    <color name="gradient_red_start">#E53935</color>   <!-- Красный начало -->
-    <color name="gradient_red_end">#C62828</color>     <!-- Красный конец -->
-
-    <!-- Градиенты для прогресса -->
-    <color name="progress_gradient_start">#4CAF50</color> <!-- Зеленый -->
-    <color name="progress_gradient_mid">#FF9800</color> <!-- Оранжевый -->
-    <color name="progress_gradient_end">#F44336</color> <!-- Красный -->
-
-    <!-- Делители -->
-    <color name="divider_light">#E0E0E0</color> <!-- Светло-серый -->
+    <color name="warning_orange">#FF9800</color>
 
     <!-- Фоновые цвета -->
-    <color name="background">#FAFAFA</color>
+    <color name="background">#F5F5F5</color>
     <color name="background_light">#FFFFFF</color>
     <color name="surface_color">#FFFFFF</color>
     <color name="card_background">#FFFFFF</color>
+    <color name="dialog_background">#FFFFFF</color>  <!-- ДОБАВЛЕНО -->
 
     <!-- Текстовые цвета -->
     <color name="text_primary">#212121</color>
     <color name="text_secondary">#757575</color>
     <color name="text_hint">#BDBDBD</color>
 
-    <!-- Цвета состояний -->
-    <color name="state_active">#4CAF50</color> <!-- Активный -->
-    <color name="state_inactive">#9E9E9E</color> <!-- Неактивный -->
-    <color name="state_completed">#2196F3</color> <!-- Завершен -->
-    <color name="state_pending">#FFC107</color> <!-- Ожидает -->
+    <color name="divider_light">#E0E0E0</color>
 
-    <!-- Прозрачные цвета -->
+    <!-- Остальные цвета -->
+    <color name="state_active">#4CAF50</color>
+    <color name="state_inactive">#9E9E9E</color>
+    <color name="state_completed">#2196F3</color>
+    <color name="state_pending">#FFC107</color>
+
     <color name="transparent_white_10">#1AFFFFFF</color>
     <color name="transparent_black_10">#1A000000</color>
     <color name="transparent_primary_20">#332196F3</color>
     <color name="transparent_success_20">#334CAF50</color>
     <color name="transparent_warning_20">#33FF9800</color>
     <color name="transparent_danger_20">#33F44336</color>
+
+    <color name="gradient_start">#2196F3</color>
+    <color name="gradient_mid">#1976D2</color>
+    <color name="gradient_green_start">#43A047</color>
+    <color name="gradient_green_end">#2E7D32</color>
+    <color name="gradient_red_start">#E53935</color>
+    <color name="gradient_red_end">#C62828</color>
+
+    <color name="progress_gradient_start">#4CAF50</color>
+    <color name="progress_gradient_mid">#FF9800</color>
+    <color name="progress_gradient_end">#F44336</color>
+
+    <color name="budget_color">#FF9800</color>
+    <color name="goal_color">#2196F3</color>
+    <color name="budget_safe">#4CAF50</color>
+    <color name="budget_warning">#FF9800</color>
+    <color name="budget_danger">#F44336</color>
+    <color name="goal_progress">#4CAF50</color>
+    <color name="goal_overdue">#F44336</color>
+    <color name="group_goal_color">#9C27B0</color>
+
+    <color name="priority_high">#F44336</color>
+    <color name="priority_medium">#FF9800</color>
+    <color name="priority_low">#4CAF50</color>
+
+    <color name="period_weekly">#00BCD4</color>
+    <color name="period_monthly">#2196F3</color>
+    <color name="period_quarterly">#3F51B5</color>
+    <color name="period_yearly">#673AB7</color>
 </resources>

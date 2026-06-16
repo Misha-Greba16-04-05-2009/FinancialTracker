@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/card_background"
     android:padding="16dp">
 
     <LinearLayout
@@ -15,7 +16,7 @@
             android:text="🔍 Детали транзакции"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#333333"
+            android:textColor="@color/text_primary"
             android:gravity="center"
             android:layout_marginBottom="24dp"/>
 
@@ -31,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:text="Тип:"
                 android:textSize="14sp"
-                android:textColor="#666666"/>
+                android:textColor="@color/text_secondary"/>
 
             <TextView
                 android:id="@+id/typeValue"
@@ -40,7 +41,7 @@
                 android:text="Доход"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="#4CAF50"/>
+                android:textColor="@color/income_color"/>
         </LinearLayout>
 
         <!-- Категория -->
@@ -55,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:text="Категория:"
                 android:textSize="14sp"
-                android:textColor="#666666"/>
+                android:textColor="@color/text_secondary"/>
 
             <TextView
                 android:id="@+id/categoryValue"
@@ -63,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:text="📦 Категория"
                 android:textSize="16sp"
-                android:textColor="#2196F3"/>
+                android:textColor="@color/primary_color"/>
         </LinearLayout>
 
         <!-- Сумма -->
@@ -78,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:text="Сумма:"
                 android:textSize="14sp"
-                android:textColor="#666666"/>
+                android:textColor="@color/text_secondary"/>
 
             <TextView
                 android:id="@+id/amountValue"
@@ -87,43 +88,7 @@
                 android:text="0.00 ₽"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#333333"
-                android:layout_marginEnd="8dp"/>
-
-            <TextView
-                android:id="@+id/currencyValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="RUB"
-                android:textSize="12sp"
-                android:textColor="#757575"
-                android:background="@drawable/currency_badge_background"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="2dp"/>
-        </LinearLayout>
-
-        <!-- Сумма в базовой валюте -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="В базовой:"
-                android:textSize="14sp"
-                android:textColor="#666666"/>
-
-            <TextView
-                android:id="@+id/amountInBaseValue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="0.00 ₽"
-                android:textSize="14sp"
-                android:textColor="#757575"/>
+                android:textColor="@color/text_primary"/>
         </LinearLayout>
 
         <!-- Дата -->
@@ -138,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:text="Дата:"
                 android:textSize="14sp"
-                android:textColor="#666666"/>
+                android:textColor="@color/text_secondary"/>
 
             <TextView
                 android:id="@+id/dateValue"
@@ -146,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:text="01.01.2024"
                 android:textSize="16sp"
-                android:textColor="#333333"/>
+                android:textColor="@color/text_primary"/>
         </LinearLayout>
 
         <!-- Счет -->
@@ -161,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:text="Счет:"
                 android:textSize="14sp"
-                android:textColor="#666666"/>
+                android:textColor="@color/text_secondary"/>
 
             <TextView
                 android:id="@+id/accountValue"
@@ -169,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:text="Основная карта"
                 android:textSize="16sp"
-                android:textColor="#333333"/>
+                android:textColor="@color/text_primary"/>
         </LinearLayout>
 
         <!-- Тип платежа -->
@@ -184,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:text="Тип платежа:"
                 android:textSize="14sp"
-                android:textColor="#666666"/>
+                android:textColor="@color/text_secondary"/>
 
             <TextView
                 android:id="@+id/paymentTypeValue"
@@ -192,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:text="💳 Карта"
                 android:textSize="16sp"
-                android:textColor="#3F51B5"/>
+                android:textColor="@color/primary_color"/>
         </LinearLayout>
 
         <!-- Описание -->
@@ -207,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:text="Описание:"
                 android:textSize="14sp"
-                android:textColor="#666666"/>
+                android:textColor="@color/text_secondary"/>
 
             <TextView
                 android:id="@+id/descriptionValue"
@@ -215,7 +180,7 @@
                 android:layout_height="wrap_content"
                 android:text="Описание транзакции"
                 android:textSize="16sp"
-                android:textColor="#333333"/>
+                android:textColor="@color/text_primary"/>
         </LinearLayout>
 
         <!-- Заметки -->
@@ -230,7 +195,7 @@
                 android:layout_height="wrap_content"
                 android:text="Заметки:"
                 android:textSize="14sp"
-                android:textColor="#666666"/>
+                android:textColor="@color/text_secondary"/>
 
             <TextView
                 android:id="@+id/notesValue"
@@ -238,23 +203,15 @@
                 android:layout_height="wrap_content"
                 android:text="Нет заметок"
                 android:textSize="14sp"
-                android:textColor="#757575"
+                android:textColor="@color/text_hint"
                 android:paddingVertical="4dp"/>
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#E0E0E0"
+            android:background="@color/divider_light"
             android:layout_marginVertical="16dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="ID транзакции:"
-            android:textSize="10sp"
-            android:textColor="#999999"
-            android:layout_marginBottom="4dp"/>
 
         <TextView
             android:id="@+id/transactionIdValue"
@@ -262,7 +219,7 @@
             android:layout_height="wrap_content"
             android:text="..."
             android:textSize="8sp"
-            android:textColor="#999999"/>
+            android:textColor="@color/text_hint"/>
 
     </LinearLayout>
 

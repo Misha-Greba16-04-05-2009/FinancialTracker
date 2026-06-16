@@ -4,23 +4,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#F5F5F5">
+    android:background="@color/background">
 
-    <!-- Заголовок и статистика -->
+    <!-- Карточка "Ваши счета" - использует ТАКОЙ ЖЕ ФОН как карточки на главной -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/card_background"
+        android:background="@color/card_background"
         android:padding="16dp"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+        android:elevation="4dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="💰 Ваши счета"
             android:textSize="20sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_primary"
             android:textStyle="bold"
             android:gravity="center"
             android:layout_marginBottom="12dp"/>
@@ -29,7 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:weightSum="2">
 
             <TextView
                 android:layout_width="0dp"
@@ -37,16 +39,19 @@
                 android:layout_weight="1"
                 android:text="Общий баланс:"
                 android:textSize="16sp"
-                android:textColor="#666666"/>
+                android:textColor="@color/text_secondary"/>
 
             <TextView
                 android:id="@+id/totalBalanceTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="0.00 руб."
+                android:layout_weight="1"
+                android:text="≈ 0.00 ₽"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#4CAF50"/>
+                android:textColor="@color/income_color"
+                android:gravity="end"/>
+
         </LinearLayout>
 
         <TextView
@@ -55,7 +60,7 @@
             android:layout_height="wrap_content"
             android:text="Всего: 0 | Учитываются: 0"
             android:textSize="14sp"
-            android:textColor="#757575"
+            android:textColor="@color/text_hint"
             android:gravity="center"/>
 
     </LinearLayout>
@@ -64,26 +69,33 @@
     <Button
         android:id="@+id/addAccountButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:text="➕ Добавить счет"
         android:textSize="16sp"
-        android:textColor="#FFFFFF"
-        android:background="#2196F3"
-        android:layout_marginBottom="16dp"
-        android:padding="12dp"/>
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:background="@drawable/button_primary"
+        android:layout_marginBottom="16dp"/>
 
-    <!-- Контейнер для счетов -->
-    <ScrollView
+    <!-- Контейнер для списка счетов -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <LinearLayout
-            android:id="@+id/accountsContainer"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+            android:layout_height="match_parent">
 
-    </ScrollView>
+            <LinearLayout
+                android:id="@+id/accountsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+        </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

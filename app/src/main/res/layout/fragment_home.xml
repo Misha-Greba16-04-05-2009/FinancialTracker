@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="@color/background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,12 +10,12 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Основная статистика -->
+        <!-- Основная статистика (Общий баланс) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/card_background"
+            android:background="@color/card_background"
             android:padding="16dp"
             android:layout_marginBottom="16dp">
 
@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:text="💰 Общий баланс"
                 android:textSize="20sp"
-                android:textColor="#333333"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_marginBottom="12dp"/>
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:text="0.00 руб."
                 android:textSize="24sp"
-                android:textColor="#4CAF50"
+                android:textColor="@color/income_color"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_marginBottom="16dp"/>
@@ -44,7 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="8dp"
+                android:weightSum="2">
 
                 <TextView
                     android:layout_width="0dp"
@@ -52,7 +53,7 @@
                     android:layout_weight="1"
                     android:text="📈 Доходы:"
                     android:textSize="14sp"
-                    android:textColor="#666666"
+                    android:textColor="@color/text_secondary"
                     android:gravity="center"/>
 
                 <TextView
@@ -62,7 +63,7 @@
                     android:layout_weight="1"
                     android:text="0.00 руб."
                     android:textSize="14sp"
-                    android:textColor="#4CAF50"
+                    android:textColor="@color/income_color"
                     android:gravity="center"/>
 
             </LinearLayout>
@@ -70,7 +71,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <TextView
                     android:layout_width="0dp"
@@ -78,7 +80,7 @@
                     android:layout_weight="1"
                     android:text="📉 Расходы:"
                     android:textSize="14sp"
-                    android:textColor="#666666"
+                    android:textColor="@color/text_secondary"
                     android:gravity="center"/>
 
                 <TextView
@@ -88,52 +90,53 @@
                     android:layout_weight="1"
                     android:text="0.00 руб."
                     android:textSize="14sp"
-                    android:textColor="#F44336"
+                    android:textColor="@color/expense_color"
                     android:gravity="center"/>
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Кнопки быстрых действий -->
+        <!-- Кнопки быстрых действий (ОДИНАКОВОГО РАЗМЕРА с текстом и иконкой) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:weightSum="2">
 
             <Button
                 android:id="@+id/addTransactionButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:layout_weight="1"
-                android:text="➕ Добавить транзакцию"
+                android:text="➕ Транзакция"
                 android:textSize="14sp"
-                android:textColor="#FFFFFF"
-                android:background="#2196F3"
-                android:padding="12dp"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:background="@drawable/button_primary"
                 android:layout_marginEnd="8dp"/>
 
             <Button
                 android:id="@+id/addGoalButton"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
+                android:layout_height="52dp"
                 android:layout_weight="1"
-                android:background="#FF9800"
-                android:padding="12dp"
-                android:text="🎯 Добавить цель"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp" />
+                android:text="🎯 Цель"
+                android:textSize="14sp"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:background="@drawable/button_orange"
+                android:layout_marginStart="8dp"/>
 
         </LinearLayout>
 
-        <!-- Балансы по типам счетов -->
+        <!-- Распределение по счетам -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/card_background"
+            android:background="@color/card_background"
             android:padding="16dp"
             android:layout_marginBottom="16dp">
 
@@ -142,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:text="🏦 Распределение по счетам"
                 android:textSize="16sp"
-                android:textColor="#333333"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp"/>
 
@@ -150,7 +153,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="8dp"
+                android:weightSum="2">
 
                 <TextView
                     android:layout_width="0dp"
@@ -158,8 +162,8 @@
                     android:layout_weight="1"
                     android:text="💰 Сбережения:"
                     android:textSize="14sp"
-                    android:textColor="#666666"
-                    android:gravity="center"/>
+                    android:textColor="@color/text_secondary"
+                    android:gravity="start"/>
 
                 <TextView
                     android:id="@+id/savingsBalanceTextView"
@@ -168,8 +172,8 @@
                     android:layout_weight="1"
                     android:text="0.00 руб."
                     android:textSize="14sp"
-                    android:textColor="#4CAF50"
-                    android:gravity="center"/>
+                    android:textColor="@color/success_color"
+                    android:gravity="end"/>
 
             </LinearLayout>
 
@@ -177,7 +181,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="8dp"
+                android:weightSum="2">
 
                 <TextView
                     android:layout_width="0dp"
@@ -185,25 +190,26 @@
                     android:layout_weight="1"
                     android:text="📈 Инвестиции:"
                     android:textSize="14sp"
-                    android:textColor="#666666"
-                    android:gravity="center"/>
+                    android:textColor="@color/text_secondary"
+                    android:gravity="start"/>
 
                 <TextView
                     android:id="@+id/investmentsBalanceTextView"
-                android:layout_width="0dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="0.00 руб."
                     android:textSize="14sp"
-                    android:textColor="#2196F3"
-                    android:gravity="center"/>
+                    android:textColor="@color/primary_color"
+                    android:gravity="end"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <TextView
                     android:layout_width="0dp"
@@ -211,8 +217,8 @@
                     android:layout_weight="1"
                     android:text="💳 Кредиты:"
                     android:textSize="14sp"
-                    android:textColor="#666666"
-                    android:gravity="center"/>
+                    android:textColor="@color/text_secondary"
+                    android:gravity="start"/>
 
                 <TextView
                     android:id="@+id/creditBalanceTextView"
@@ -221,8 +227,8 @@
                     android:layout_weight="1"
                     android:text="0.00 руб."
                     android:textSize="14sp"
-                    android:textColor="#F44336"
-                    android:gravity="center"/>
+                    android:textColor="@color/error_color"
+                    android:gravity="end"/>
 
             </LinearLayout>
 
@@ -233,7 +239,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/card_background"
+            android:background="@color/card_background"
             android:padding="16dp"
             android:layout_marginBottom="16dp">
 
@@ -242,7 +248,7 @@
                 android:layout_height="wrap_content"
                 android:text="📊 Последние транзакции"
                 android:textSize="16sp"
-                android:textColor="#333333"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp"/>
 
@@ -259,7 +265,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/card_background"
+            android:background="@color/card_background"
             android:padding="16dp">
 
             <TextView
@@ -267,7 +273,7 @@
                 android:layout_height="wrap_content"
                 android:text="💳 Активные счета"
                 android:textSize="16sp"
-                android:textColor="#333333"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp"/>
 

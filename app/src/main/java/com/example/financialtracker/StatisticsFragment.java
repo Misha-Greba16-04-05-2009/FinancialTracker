@@ -69,14 +69,12 @@ public class StatisticsFragment extends Fragment {
     private void setupSpinners() {
         if (mainActivity == null) return;
 
-        // Генерация списка годов
         List<String> yearOptions = new ArrayList<>();
         yearOptions.add("Все годы");
 
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
 
-        // Годы от 2000 до текущего + 5
         for (int year = 2000; year <= currentYear + 5; year++) {
             yearOptions.add(String.valueOf(year));
         }
@@ -86,7 +84,6 @@ public class StatisticsFragment extends Fragment {
         yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         yearSpinner.setAdapter(yearAdapter);
 
-        // Устанавливаем текущий год
         String currentYearStr = String.valueOf(currentYear);
         int position = yearOptions.indexOf(currentYearStr);
         if (position != -1) {
@@ -94,7 +91,6 @@ public class StatisticsFragment extends Fragment {
             selectedYear = currentYear;
         }
 
-        // Настройка месяцев
         List<String> monthOptions = new ArrayList<>();
         monthOptions.add("Все месяцы");
         for (String month : monthNames) {
@@ -106,7 +102,6 @@ public class StatisticsFragment extends Fragment {
         monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         monthSpinner.setAdapter(monthAdapter);
 
-        // Устанавливаем текущий месяц
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
         monthSpinner.setSelection(currentMonth);
         selectedMonth = currentMonth;
@@ -146,15 +141,19 @@ public class StatisticsFragment extends Fragment {
     }
 
     public void updateStatistics() {
-        if (mainActivity == null || statisticsContainer == null || summaryTextView == null) return;
+        if (mainActivity == null || statisticsContainer == null) return;
 
+        // Очищаем контейнер для категорий
         statisticsContainer.removeAllViews();
 
-        // Общая статистика
+        // Обновляем текст в XML-карточке (она у тебя в fragment_statistics_modern.xml)
         String statistics = getFilteredStatistics();
-        summaryTextView.setText(statistics);
+        if (summaryTextView != null) {
+            summaryTextView.setText(statistics);
+            summaryTextView.setTextColor(getResources().getColor(R.color.text_secondary));
+        }
 
-        // Добавляем визуализацию
+        // Добавляем визуализацию категорий (без дублирования карточки)
         addCategoryVisualization();
     }
 
@@ -201,7 +200,7 @@ public class StatisticsFragment extends Fragment {
                         "📈 Доходы: %.2f руб. (%d операций)\n" +
                         "📉 Расходы: %.2f руб. (%d операций)\n" +
                         "📊 Всего операций: %d",
-                periodText,
+                periodText.toUpperCase(),
                 balance,
                 totalIncome, incomeCount,
                 totalExpenses, expenseCount,
@@ -258,72 +257,17 @@ public class StatisticsFragment extends Fragment {
             }
         }
 
-        // Добавляем карточку общей статистики
-        addSummaryCard(totalIncome, totalExpenses);
+        // НЕ ДОБАВЛЯЕМ addSummaryCard() — карточка уже есть в XML!
 
-        // Добавляем графики для доходов
+        // Добавляем распределение доходов
         if (totalIncome > 0) {
             addCategorySection("📈 РАСПРЕДЕЛЕНИЕ ДОХОДОВ", incomeCategories, totalIncome, true);
         }
 
-        // Добавляем графики для расходов
+        // Добавляем распределение расходов
         if (totalExpenses > 0) {
             addCategorySection("📉 РАСПРЕДЕЛЕНИЕ РАСХОДОВ", expenseCategories, totalExpenses, false);
         }
-    }
-
-    private void addSummaryCard(double totalIncome, double totalExpenses) {
-        if (getContext() == null) return;
-
-        LinearLayout summaryCard = new LinearLayout(getContext());
-        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        cardParams.setMargins(16, 16, 16, 16);
-        summaryCard.setLayoutParams(cardParams);
-        summaryCard.setOrientation(LinearLayout.VERTICAL);
-        summaryCard.setPadding(20, 20, 20, 20);
-        summaryCard.setBackgroundResource(R.drawable.category_card_background);
-
-        // Заголовок
-        TextView title = new TextView(getContext());
-        title.setText("📊 Общая статистика " + getPeriodText());
-        title.setTextSize(18);
-        title.setTypeface(null, Typeface.BOLD);
-        title.setTextColor(Color.parseColor("#2196F3"));
-        title.setPadding(0, 0, 0, 12);
-
-        // Доходы
-        TextView incomeText = new TextView(getContext());
-        incomeText.setText(String.format(Locale.getDefault(), "📈 Доходы: %.2f руб.", totalIncome));
-        incomeText.setTextSize(15);
-        incomeText.setTextColor(Color.parseColor("#4CAF50"));
-        incomeText.setPadding(0, 4, 0, 4);
-
-        // Расходы
-        TextView expenseText = new TextView(getContext());
-        expenseText.setText(String.format(Locale.getDefault(), "📉 Расходы: %.2f руб.", totalExpenses));
-        expenseText.setTextSize(15);
-        expenseText.setTextColor(Color.parseColor("#F44336"));
-        expenseText.setPadding(0, 4, 0, 4);
-
-        // Баланс
-        double balance = totalIncome - totalExpenses;
-        TextView balanceText = new TextView(getContext());
-        balanceText.setText(String.format(Locale.getDefault(), "💰 Баланс: %.2f руб.", balance));
-        balanceText.setTextSize(16);
-        balanceText.setTypeface(null, Typeface.BOLD);
-        balanceText.setTextColor(balance >= 0 ?
-                Color.parseColor("#4CAF50") : Color.parseColor("#F44336"));
-        balanceText.setPadding(0, 8, 0, 0);
-
-        summaryCard.addView(title);
-        summaryCard.addView(incomeText);
-        summaryCard.addView(expenseText);
-        summaryCard.addView(balanceText);
-
-        statisticsContainer.addView(summaryCard);
     }
 
     private void addCategorySection(String title, Map<String, Double> categories,
@@ -339,15 +283,18 @@ public class StatisticsFragment extends Fragment {
         sectionCard.setLayoutParams(cardParams);
         sectionCard.setOrientation(LinearLayout.VERTICAL);
         sectionCard.setPadding(20, 20, 20, 20);
-        sectionCard.setBackgroundResource(R.drawable.category_card_background);
+        sectionCard.setBackgroundResource(R.drawable.card_background);
 
         // Заголовок раздела
         TextView sectionTitle = new TextView(getContext());
         sectionTitle.setText(title);
         sectionTitle.setTextSize(16);
         sectionTitle.setTypeface(null, Typeface.BOLD);
-        sectionTitle.setTextColor(isIncome ?
-                Color.parseColor("#4CAF50") : Color.parseColor("#F44336"));
+        if (isIncome) {
+            sectionTitle.setTextColor(getResources().getColor(R.color.income_color));
+        } else {
+            sectionTitle.setTextColor(getResources().getColor(R.color.expense_color));
+        }
         sectionTitle.setPadding(0, 0, 0, 12);
 
         sectionCard.addView(sectionTitle);
@@ -380,7 +327,7 @@ public class StatisticsFragment extends Fragment {
         ));
         infoLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-        // Название
+        // Название категории
         TextView nameText = new TextView(getContext());
         LinearLayout.LayoutParams nameParams = new LinearLayout.LayoutParams(
                 0,
@@ -393,7 +340,7 @@ public class StatisticsFragment extends Fragment {
                 category.substring(category.indexOf(" ") + 1) : category;
         nameText.setText(displayName);
         nameText.setTextSize(14);
-        nameText.setTextColor(Color.parseColor("#424242"));
+        nameText.setTextColor(getResources().getColor(R.color.text_primary));
 
         // Сумма и процент
         TextView amountText = new TextView(getContext());
@@ -406,8 +353,11 @@ public class StatisticsFragment extends Fragment {
         amountText.setText(String.format(Locale.getDefault(),
                 "%.2f руб. (%.1f%%)", amount, percentage));
         amountText.setTextSize(14);
-        amountText.setTextColor(isIncome ?
-                Color.parseColor("#4CAF50") : Color.parseColor("#F44336"));
+        if (isIncome) {
+            amountText.setTextColor(getResources().getColor(R.color.income_color));
+        } else {
+            amountText.setTextColor(getResources().getColor(R.color.expense_color));
+        }
 
         infoLayout.addView(nameText);
         infoLayout.addView(amountText);

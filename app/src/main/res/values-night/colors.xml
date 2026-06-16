@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Базовые цвета -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+
+    <!-- Основные цвета -->
+    <color name="primary_color">#64B5F6</color>
+    <color name="primary_dark">#42A5F5</color>
+    <color name="primary_light">#90CAF9</color>
+    <color name="secondary_color">#9E9E9E</color>
+    <color name="accent_color">#FF4081</color>
+
+    <!-- Финансовые цвета -->
+    <color name="income_color">#81C784</color>
+    <color name="expense_color">#E57373</color>
+    <color name="success_color">#81C784</color>
+    <color name="error_color">#E57373</color>
+    <color name="warning_orange">#FFB74D</color>
+
+    <!-- Фоновые цвета — ТЁМНЫЕ -->
+    <color name="background">#121212</color>
+    <color name="background_light">#1E1E1E</color>
+    <color name="surface_color">#2C2C2C</color>
+    <color name="card_background">#2C2C2C</color>  <!-- ЭТОТ ЦВЕТ ДЛЯ КАРТОЧЕК -->
+    <color name="dialog_background">#1E1E1E</color>
+
+    <!-- Текстовые цвета — БЕЛЫЕ -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B3B3B3</color>
+    <color name="text_hint">#808080</color>
+
+    <color name="divider_light">#404040</color>
+
+    <!-- Остальные цвета -->
+    <color name="state_active">#81C784</color>
+    <color name="state_inactive">#757575</color>
+    <color name="state_completed">#64B5F6</color>
+    <color name="state_pending">#FFD54F</color>
+
+    <color name="transparent_white_10">#1AFFFFFF</color>
+    <color name="transparent_black_10">#1A000000</color>
+    <color name="transparent_primary_20">#3364B5F6</color>
+    <color name="transparent_success_20">#3381C784</color>
+    <color name="transparent_warning_20">#33FFB74D</color>
+    <color name="transparent_danger_20">#33E57373</color>
+
+    <color name="gradient_start">#64B5F6</color>
+    <color name="gradient_mid">#42A5F5</color>
+    <color name="gradient_green_start">#81C784</color>
+    <color name="gradient_green_end">#66BB6A</color>
+    <color name="gradient_red_start">#E57373</color>
+    <color name="gradient_red_end">#EF5350</color>
+
+    <color name="progress_gradient_start">#81C784</color>
+    <color name="progress_gradient_mid">#FFB74D</color>
+    <color name="progress_gradient_end">#E57373</color>
+
+    <color name="budget_color">#FFB74D</color>
+    <color name="goal_color">#64B5F6</color>
+    <color name="budget_safe">#81C784</color>
+    <color name="budget_warning">#FFB74D</color>
+    <color name="budget_danger">#E57373</color>
+    <color name="goal_progress">#81C784</color>
+    <color name="goal_overdue">#E57373</color>
+    <color name="group_goal_color">#CE93D8</color>
+
+    <color name="priority_high">#E57373</color>
+    <color name="priority_medium">#FFB74D</color>
+    <color name="priority_low">#81C784</color>
+
+    <color name="period_weekly">#80DEEA</color>
+    <color name="period_monthly">#64B5F6</color>
+    <color name="period_quarterly">#7986CB</color>
+    <color name="period_yearly">#B39DDB</color>
+</resources>

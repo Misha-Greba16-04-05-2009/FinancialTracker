@@ -140,7 +140,14 @@ public class DataFragment extends Fragment {
             transactionLayout.setLayoutParams(layoutParams);
             transactionLayout.setOrientation(LinearLayout.VERTICAL);
             transactionLayout.setPadding(16, 12, 16, 12);
-            transactionLayout.setBackgroundResource(R.drawable.card_background);
+
+            // Фон карточки (меняется с темой)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                transactionLayout.setBackgroundColor(getResources().getColor(R.color.card_background, null));
+            } else {
+                transactionLayout.setBackgroundColor(getResources().getColor(R.color.card_background));
+            }
+            transactionLayout.setElevation(2f);
 
             // Верхняя строка
             LinearLayout topRow = new LinearLayout(getContext());
@@ -182,6 +189,7 @@ public class DataFragment extends Fragment {
             infoLayout.setLayoutParams(infoParams);
             infoLayout.setOrientation(LinearLayout.VERTICAL);
 
+            // ОПИСАНИЕ (теперь цвет из ресурсов - белый в тёмной теме)
             TextView descriptionView = new TextView(getContext());
             descriptionView.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -195,8 +203,9 @@ public class DataFragment extends Fragment {
             descriptionView.setText(description);
             descriptionView.setTextSize(15);
             descriptionView.setTypeface(null, Typeface.BOLD);
-            descriptionView.setTextColor(Color.BLACK);
+            descriptionView.setTextColor(getResources().getColor(R.color.text_primary));
 
+            // КАТЕГОРИЯ (цвет из ресурсов)
             TextView categoryView = new TextView(getContext());
             categoryView.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -206,19 +215,13 @@ public class DataFragment extends Fragment {
             String category = transaction.getCategoryIcon() + " " + transaction.getCategoryWithoutIcon();
             categoryView.setText(category);
             categoryView.setTextSize(12);
-            if (mainActivity != null) {
-                categoryView.setTextColor(mainActivity.getCategoryManager().getCategoryColor(
-                        transaction.getCategory(), transaction.isIncome()));
-            } else {
-                categoryView.setTextColor(transaction.isIncome() ?
-                        Color.parseColor("#4CAF50") : Color.parseColor("#F44336"));
-            }
+            categoryView.setTextColor(getResources().getColor(R.color.text_secondary));
             categoryView.setPadding(0, 2, 0, 0);
 
             infoLayout.addView(descriptionView);
             infoLayout.addView(categoryView);
 
-            // ============ ИСПРАВЛЕННЫЙ БЛОК СУММЫ ============
+            // Сумма и дата
             LinearLayout amountDateLayout = new LinearLayout(getContext());
             amountDateLayout.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -227,19 +230,22 @@ public class DataFragment extends Fragment {
             amountDateLayout.setOrientation(LinearLayout.VERTICAL);
             amountDateLayout.setGravity(android.view.Gravity.END);
 
+            // СУММА (цвет из ресурсов - зелёный/красный)
             TextView amountView = new TextView(getContext());
             amountView.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             ));
-
-            // Используем getFormattedAmount() который теперь возвращает "X.XX ₽"
             amountView.setText(transaction.getFormattedAmount());
             amountView.setTextSize(16);
             amountView.setTypeface(null, Typeface.BOLD);
-            amountView.setTextColor(transaction.isIncome() ?
-                    Color.parseColor("#4CAF50") : Color.parseColor("#F44336"));
+            if (transaction.isIncome()) {
+                amountView.setTextColor(getResources().getColor(R.color.income_color));
+            } else {
+                amountView.setTextColor(getResources().getColor(R.color.expense_color));
+            }
 
+            // ДАТА (цвет из ресурсов)
             TextView dateView = new TextView(getContext());
             dateView.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -247,12 +253,11 @@ public class DataFragment extends Fragment {
             ));
             dateView.setText(transaction.getFormattedDateShort());
             dateView.setTextSize(11);
-            dateView.setTextColor(Color.GRAY);
+            dateView.setTextColor(getResources().getColor(R.color.text_hint));
             dateView.setPadding(0, 2, 0, 0);
 
             amountDateLayout.addView(amountView);
             amountDateLayout.addView(dateView);
-            // ============ КОНЕЦ ИСПРАВЛЕННОГО БЛОКА ============
 
             topRow.addView(selectCheckBox);
             topRow.addView(iconView);
@@ -267,7 +272,6 @@ public class DataFragment extends Fragment {
             ));
             bottomRow.setPadding(0, 8, 0, 0);
 
-            // Иконка платежа + название счета
             String accountName = transaction.getAccountName();
             if (accountName == null || accountName.isEmpty() || accountName.equals("Без счета")) {
                 accountName = "Без счета";
@@ -282,7 +286,7 @@ public class DataFragment extends Fragment {
             ));
             accountView.setText(accountText);
             accountView.setTextSize(11);
-            accountView.setTextColor(transaction.getPaymentTypeColor());
+            accountView.setTextColor(getResources().getColor(R.color.text_secondary));
             accountView.setPadding(0, 0, 16, 0);
 
             bottomRow.addView(accountView);
@@ -290,18 +294,16 @@ public class DataFragment extends Fragment {
             transactionLayout.addView(topRow);
             transactionLayout.addView(bottomRow);
 
-            // Обработчик клика на всю карточку
+            // Обработчик клика
             transactionLayout.setOnClickListener(v -> {
                 if (isSelectionMode) {
-                    // В режиме выбора - переключаем чекбокс
                     selectCheckBox.setChecked(!selectCheckBox.isChecked());
                 } else {
-                    // В обычном режиме - показываем детали
                     showTransactionDetails(transaction);
                 }
             });
 
-            // Долгое нажатие для входа в режим выбора
+            // Долгое нажатие
             transactionLayout.setOnLongClickListener(v -> {
                 if (!isSelectionMode) {
                     enterSelectionMode();

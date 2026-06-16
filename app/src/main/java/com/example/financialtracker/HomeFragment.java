@@ -55,7 +55,6 @@ public class HomeFragment extends Fragment {
 
         mainActivity = (MainActivity) getActivity();
 
-        // ПОЛУЧАЕМ rateManager ИЗ MainActivity
         if (mainActivity != null) {
             rateManager = mainActivity.getRateManager();
         }
@@ -93,7 +92,6 @@ public class HomeFragment extends Fragment {
 
         DataManager dataManager = mainActivity.getDataManager();
 
-        // Получаем общий баланс (доходы - расходы)
         double totalBalance = mainActivity.getBalance();
 
         String baseCurrencySymbol = "₽";
@@ -105,7 +103,6 @@ public class HomeFragment extends Fragment {
         totalExpenseTextView.setText(String.format(Locale.getDefault(),
                 "%.2f руб.", mainActivity.getTotalExpenses()));
 
-        // Обновляем балансы по типам счетов
         double savingsBalance = 0;
         double investmentsBalance = 0;
         double creditBalance = 0;
@@ -239,7 +236,6 @@ public class HomeFragment extends Fragment {
         amountView.setTextColor(transaction.isIncome() ?
                 Color.parseColor("#4CAF50") : Color.parseColor("#F44336"));
 
-        // Используем getFormattedAmount() который возвращает "X.XX ₽"
         amountView.setText(transaction.getFormattedAmount());
 
         TextView dateView = new TextView(getContext());
@@ -340,7 +336,6 @@ public class HomeFragment extends Fragment {
         infoLayout.addView(nameView);
         infoLayout.addView(typeView);
 
-        // Баланс
         TextView balanceView = new TextView(getContext());
         balanceView.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -531,7 +526,6 @@ public class HomeFragment extends Fragment {
                 Toast.LENGTH_SHORT).show();
     }
 
-    // ============ ИСПРАВЛЕННЫЙ МЕТОД ДОБАВЛЕНИЯ ТРАНЗАКЦИИ ============
     private void showAddTransactionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("➕ Добавить транзакцию");
@@ -553,9 +547,10 @@ public class HomeFragment extends Fragment {
         final LinearLayout dateLayout = dialogView.findViewById(R.id.dateLayout);
         final TextView dateTextView = dialogView.findViewById(R.id.dateTextView);
 
-        // ДОБАВЛЯЕМ ВЫБОР ВАЛЮТЫ (оставляем для интерфейса, но скрываем функционал)
         final Spinner currencySpinner = dialogView.findViewById(R.id.currencySpinner);
-        setupCurrencySpinner(currencySpinner);
+        if (currencySpinner != null) {
+            currencySpinner.setVisibility(View.GONE);
+        }
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         dateTextView.setText(sdf.format(new Date()));
@@ -586,7 +581,6 @@ public class HomeFragment extends Fragment {
         final boolean[] isIncome = {true};
         final String[] paymentType = {"Карта"};
         final Date[] selectedDate = {new Date()};
-        final String[] selectedCurrency = {"RUB"};
 
         incomeTypeButton.setOnClickListener(v -> {
             isIncome[0] = true;
@@ -652,17 +646,6 @@ public class HomeFragment extends Fragment {
             datePickerDialog.show();
         });
 
-        // Обработчик выбора валюты (оставляем для интерфейса)
-        currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedCurrency[0] = (String) parent.getItemAtPosition(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-
         incomeTypeButton.performClick();
         cardButton.performClick();
 
@@ -696,7 +679,6 @@ public class HomeFragment extends Fragment {
                     accountName = accountInfo.substring(0, accountInfo.indexOf(" - "));
                 }
 
-                // ============ ИСПРАВЛЕННЫЙ КОНСТРУКТОР ============
                 Transaction transaction = new Transaction(
                         description,
                         amount,
@@ -725,22 +707,5 @@ public class HomeFragment extends Fragment {
 
         builder.setNegativeButton("Отмена", null);
         builder.show();
-    }
-
-    // ДОБАВЛЯЕМ МЕТОД ДЛЯ НАСТРОЙКИ ВЫБОРА ВАЛЮТЫ (оставляем для интерфейса)
-    private void setupCurrencySpinner(Spinner currencySpinner) {
-        List<String> currencies = rateManager.getSupportedCurrencies();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_item, currencies);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        currencySpinner.setAdapter(adapter);
-
-        String baseCurrency = "RUB";
-        for (int i = 0; i < currencies.size(); i++) {
-            if (currencies.get(i).equals(baseCurrency)) {
-                currencySpinner.setSelection(i);
-                break;
-            }
-        }
     }
 }

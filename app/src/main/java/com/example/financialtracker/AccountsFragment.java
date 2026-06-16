@@ -38,18 +38,14 @@ public class AccountsFragment extends Fragment {
 
     private static final String TAG = "AccountsFragment";
 
-    // UI элементы
     private LinearLayout accountsContainer;
     private Button addAccountButton;
     private TextView totalBalanceTextView;
     private TextView accountsCountTextView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    // Менеджеры
     private MainActivity mainActivity;
     private DataManager dataManager;
-
-    // Данные
     private List<Account> accounts = new ArrayList<>();
 
     @Nullable
@@ -81,7 +77,6 @@ public class AccountsFragment extends Fragment {
         initViews(view);
         setupListeners();
 
-        // Принудительная загрузка счетов
         forceLoadAccounts();
 
         return view;
@@ -222,7 +217,6 @@ public class AccountsFragment extends Fragment {
 
     private void addAccountView(final Account account) {
         if (getContext() == null || accountsContainer == null || account == null) {
-            Log.e(TAG, "addAccountView: null check failed");
             return;
         }
 
@@ -236,8 +230,16 @@ public class AccountsFragment extends Fragment {
             accountLayout.setLayoutParams(layoutParams);
             accountLayout.setOrientation(LinearLayout.VERTICAL);
             accountLayout.setPadding(20, 16, 20, 16);
-            accountLayout.setBackgroundResource(R.drawable.card_background);
+
+            // ПРЯМОЕ ЗАДАНИЕ ЦВЕТА ФОНА
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                accountLayout.setBackgroundColor(getResources().getColor(R.color.card_background, null));
+            } else {
+                accountLayout.setBackgroundColor(getResources().getColor(R.color.card_background));
+            }
+
             accountLayout.setClickable(true);
+            accountLayout.setElevation(4f);
 
             // Верхняя строка
             LinearLayout topRow = new LinearLayout(getContext());
@@ -247,14 +249,12 @@ public class AccountsFragment extends Fragment {
             ));
             topRow.setOrientation(LinearLayout.HORIZONTAL);
 
-            // Иконка
             TextView iconView = new TextView(getContext());
             iconView.setLayoutParams(new LinearLayout.LayoutParams(48, 48));
             iconView.setText(account.getIcon());
             iconView.setTextSize(24);
             iconView.setGravity(android.view.Gravity.CENTER);
 
-            // Информация
             LinearLayout infoLayout = new LinearLayout(getContext());
             LinearLayout.LayoutParams infoParams = new LinearLayout.LayoutParams(
                     0,
@@ -272,7 +272,8 @@ public class AccountsFragment extends Fragment {
             ));
             nameView.setText(account.getName());
             nameView.setTextSize(18);
-            nameView.setTextColor(Color.BLACK);
+            nameView.setTextColor(getResources().getColor(R.color.text_primary));
+            nameView.setTypeface(null, android.graphics.Typeface.BOLD);
 
             TextView typeView = new TextView(getContext());
             typeView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -281,13 +282,12 @@ public class AccountsFragment extends Fragment {
             ));
             typeView.setText(account.getType() + " • " + account.getPaymentType());
             typeView.setTextSize(14);
-            typeView.setTextColor(Color.GRAY);
+            typeView.setTextColor(getResources().getColor(R.color.text_secondary));
             typeView.setPadding(0, 4, 0, 0);
 
             infoLayout.addView(nameView);
             infoLayout.addView(typeView);
 
-            // Баланс
             LinearLayout balanceLayout = new LinearLayout(getContext());
             balanceLayout.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -301,17 +301,16 @@ public class AccountsFragment extends Fragment {
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             ));
-
             balanceView.setText(account.getFormattedBalance());
             balanceView.setTextSize(18);
             balanceView.setTextColor(account.getBalanceColor());
+            balanceView.setTypeface(null, android.graphics.Typeface.BOLD);
 
             balanceLayout.addView(balanceView);
             topRow.addView(iconView);
             topRow.addView(infoLayout);
             topRow.addView(balanceLayout);
 
-            // Нижняя строка
             LinearLayout bottomRow = new LinearLayout(getContext());
             bottomRow.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -328,7 +327,7 @@ public class AccountsFragment extends Fragment {
             String desc = account.getDescription();
             descriptionView.setText((desc == null || desc.isEmpty()) ? "Без описания" : desc);
             descriptionView.setTextSize(12);
-            descriptionView.setTextColor(Color.DKGRAY);
+            descriptionView.setTextColor(getResources().getColor(R.color.text_secondary));
 
             TextView statusView = new TextView(getContext());
             statusView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -338,7 +337,8 @@ public class AccountsFragment extends Fragment {
             statusView.setText(account.isIncludedInTotalBalance() ? "✅ Учитывается" : "⏸️ Не учитывается");
             statusView.setTextSize(12);
             statusView.setTextColor(account.isIncludedInTotalBalance() ?
-                    Color.parseColor("#4CAF50") : Color.parseColor("#FF9800"));
+                    getResources().getColor(R.color.success_color) :
+                    getResources().getColor(R.color.warning_orange));
 
             bottomRow.addView(descriptionView);
             bottomRow.addView(statusView);
@@ -346,11 +346,9 @@ public class AccountsFragment extends Fragment {
             accountLayout.addView(topRow);
             accountLayout.addView(bottomRow);
 
-            // ИСПРАВЛЕНО: лямбда вместо анонимного класса
             accountLayout.setOnClickListener(v -> showAccountOptionsDialog(account));
 
             accountsContainer.addView(accountLayout);
-            Log.d(TAG, "Account view added: " + account.getName());
 
         } catch (Exception e) {
             Log.e(TAG, "Error adding account view: " + e.getMessage());
@@ -376,18 +374,15 @@ public class AccountsFragment extends Fragment {
             final LinearLayout dateLayout = dialogView.findViewById(R.id.dateLayout);
             final TextView dateTextView = dialogView.findViewById(R.id.dateTextView);
 
-            // Скрываем выбор валюты
             View currencySpinner = dialogView.findViewById(R.id.currencySpinner);
             if (currencySpinner != null) {
                 currencySpinner.setVisibility(View.GONE);
             }
 
-            // Дата
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
             final Date[] selectedDate = {new Date()};
             dateTextView.setText(sdf.format(selectedDate[0]));
 
-            // ИСПРАВЛЕНО: лямбда вместо анонимного класса
             dateLayout.setOnClickListener(v -> {
                 try {
                     Calendar calendar = Calendar.getInstance();
@@ -410,14 +405,12 @@ public class AccountsFragment extends Fragment {
                 }
             });
 
-            // Типы счетов
             String[] accountTypes = {"Основной", "Сберегательный", "Инвестиционный", "Кредитный"};
             ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),
                     android.R.layout.simple_spinner_item, accountTypes);
             typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             typeSpinner.setAdapter(typeAdapter);
 
-            // Типы платежей
             String[] paymentTypes = {"Карта", "Наличные", "Электронные деньги", "Другой"};
             ArrayAdapter<String> paymentAdapter = new ArrayAdapter<>(getContext(),
                     android.R.layout.simple_spinner_item, paymentTypes);
@@ -426,7 +419,6 @@ public class AccountsFragment extends Fragment {
 
             builder.setView(dialogView);
 
-            // ИСПРАВЛЕНО: лямбда вместо анонимного класса
             builder.setPositiveButton("Добавить", (dialog, which) -> {
                 try {
                     String name = nameInput.getText().toString().trim();
@@ -513,7 +505,6 @@ public class AccountsFragment extends Fragment {
 
             builder.setView(dialogView);
 
-            // ИСПРАВЛЕНО: лямбда вместо анонимного класса
             builder.setPositiveButton("Пополнить", (dialog, which) -> {
                 try {
                     String amountStr = amountInput.getText().toString().trim();
@@ -579,7 +570,6 @@ public class AccountsFragment extends Fragment {
 
             builder.setView(dialogView);
 
-            // ИСПРАВЛЕНО: лямбда вместо анонимного класса
             builder.setPositiveButton("Снять", (dialog, which) -> {
                 try {
                     String amountStr = amountInput.getText().toString().trim();
@@ -653,13 +643,11 @@ public class AccountsFragment extends Fragment {
             final LinearLayout dateLayout = dialogView.findViewById(R.id.dateLayout);
             final TextView dateTextView = dialogView.findViewById(R.id.dateTextView);
 
-            // Скрываем выбор валюты
             View currencySpinner = dialogView.findViewById(R.id.currencySpinner);
             if (currencySpinner != null) {
                 currencySpinner.setVisibility(View.GONE);
             }
 
-            // Заполняем данные
             nameInput.setText(account.getName());
             balanceInput.setText(String.valueOf(account.getBalance()));
             descriptionInput.setText(account.getDescription());
@@ -669,7 +657,6 @@ public class AccountsFragment extends Fragment {
             final Date[] selectedDate = {account.getCreatedDate()};
             dateTextView.setText(sdf.format(selectedDate[0]));
 
-            // ИСПРАВЛЕНО: лямбда вместо анонимного класса
             dateLayout.setOnClickListener(v -> {
                 try {
                     Calendar calendar = Calendar.getInstance();
@@ -692,7 +679,6 @@ public class AccountsFragment extends Fragment {
                 }
             });
 
-            // Типы счетов
             String[] accountTypes = {"Основной", "Сберегательный", "Инвестиционный", "Кредитный"};
             ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getContext(),
                     android.R.layout.simple_spinner_item, accountTypes);
@@ -706,7 +692,6 @@ public class AccountsFragment extends Fragment {
                 }
             }
 
-            // Типы платежей
             String[] paymentTypes = {"Карта", "Наличные", "Электронные деньги", "Другой"};
             ArrayAdapter<String> paymentAdapter = new ArrayAdapter<>(getContext(),
                     android.R.layout.simple_spinner_item, paymentTypes);
@@ -722,7 +707,6 @@ public class AccountsFragment extends Fragment {
 
             builder.setView(dialogView);
 
-            // ИСПРАВЛЕНО: лямбда вместо анонимного класса
             builder.setPositiveButton("Сохранить", (dialog, which) -> {
                 try {
                     String name = nameInput.getText().toString().trim();
@@ -827,7 +811,6 @@ public class AccountsFragment extends Fragment {
                             "Баланс: " + account.getFormattedBalance() + "\n" +
                             "Дата создания: " + account.getFormattedDate() + "\n\n" +
                             "Все транзакции останутся, но без привязки к счету.")
-                    // ИСПРАВЛЕНО: лямбда вместо анонимного класса
                     .setPositiveButton("Удалить", (dialog, which) -> {
                         try {
                             List<Account> accounts = dataManager.loadAccounts();
@@ -867,7 +850,6 @@ public class AccountsFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Действия со счетом: " + account.getName());
 
-            // ИСПРАВЛЕНО: лямбда вместо анонимного класса
             builder.setItems(options, (dialog, which) -> {
                 try {
                     switch (which) {

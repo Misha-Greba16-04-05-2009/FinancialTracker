@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@color/background"
     android:padding="16dp">
 
     <LinearLayout
@@ -12,14 +12,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Заголовок -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="📋 Отчёты"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#2196F3"
+            android:textColor="@color/text_primary"
             android:layout_marginBottom="16dp"/>
 
         <!-- Быстрые отчёты -->
@@ -28,6 +27,7 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/card_background"
             android:layout_marginBottom="16dp">
 
             <LinearLayout
@@ -42,31 +42,38 @@
                     android:text="⚡ Быстрые отчёты"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="#333333"
+                    android:textColor="@color/text_primary"
                     android:layout_marginBottom="16dp"/>
 
                 <Button
                     android:id="@+id/monthlyReportButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:text="📅 Месячный отчёт"
-                    android:backgroundTint="#4CAF50"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/success_color"
                     android:layout_marginBottom="8dp"/>
 
                 <Button
                     android:id="@+id/yearlyReportButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:text="📆 Годовой отчёт"
-                    android:backgroundTint="#2196F3"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/primary_color"
                     android:layout_marginBottom="8dp"/>
 
                 <Button
                     android:id="@+id/categoryReportButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:text="🏷️ Отчёт по категориям"
-                    android:backgroundTint="#FF9800"/>
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/warning_orange"/>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -76,6 +83,7 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/card_background"
             android:layout_marginBottom="16dp">
 
             <LinearLayout
@@ -90,23 +98,28 @@
                     android:text="💾 Экспорт данных"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="#333333"
+                    android:textColor="@color/text_primary"
                     android:layout_marginBottom="16dp"/>
 
                 <Button
                     android:id="@+id/generatePdfButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:text="📄 Создать PDF отчёт"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
                     android:backgroundTint="#9C27B0"
                     android:layout_marginBottom="8dp"/>
 
                 <Button
                     android:id="@+id/exportCsvButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:text="📊 Экспорт в CSV"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
                     android:backgroundTint="#607D8B"/>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -115,7 +128,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="12dp"
-            app:cardElevation="4dp">
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/card_background">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -129,7 +143,7 @@
                     android:text="ℹ️ Информация"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="#333333"
+                    android:textColor="@color/text_primary"
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
@@ -137,8 +151,9 @@
                     android:layout_height="wrap_content"
                     android:text="Отчёты помогут вам:\n• Анализировать финансы\n• Планировать бюджет\n• Отслеживать прогресс\n• Принимать решения"
                     android:textSize="14sp"
-                    android:textColor="#757575"
+                    android:textColor="@color/text_secondary"
                     android:lineSpacingExtra="4dp"/>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

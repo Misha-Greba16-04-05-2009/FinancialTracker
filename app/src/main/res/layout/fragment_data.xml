@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="@color/background">
 
     <!-- Верхняя панель -->
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#2196F3"
+        android:background="@color/primary_color"
         android:elevation="4dp">
 
         <TextView
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:text="📋 Данные и записи"
             android:textSize="20sp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textStyle="bold"/>
 
     </androidx.appcompat.widget.Toolbar>
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="12dp"
-        android:background="#FFFFFF"
+        android:background="@color/card_background"
         android:elevation="2dp"
         android:visibility="gone">
 
@@ -41,7 +41,7 @@
             android:layout_weight="1"
             android:text="Выбрано: 0"
             android:textSize="16sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_primary"
             android:gravity="center_vertical"/>
 
         <Button
@@ -51,7 +51,7 @@
             android:text="Выбрать все"
             android:textSize="12sp"
             android:background="@drawable/button_primary"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
             android:layout_marginEnd="8dp"/>
@@ -63,7 +63,7 @@
             android:text="Удалить"
             android:textSize="12sp"
             android:background="@drawable/button_danger"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:paddingHorizontal="16dp"
             android:paddingVertical="6dp"
             android:enabled="false"/>
@@ -75,7 +75,7 @@
             android:text="✕"
             android:textSize="16sp"
             android:background="@android:color/transparent"
-            android:textColor="#757575"
+            android:textColor="@color/text_secondary"
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"/>
     </LinearLayout>
@@ -86,7 +86,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="12dp"
-        android:background="#FFFFFF">
+        android:background="@color/card_background">
 
         <Button
             android:id="@+id/filterButton"
@@ -95,7 +95,7 @@
             android:text="🔍 Фильтр транзакций"
             android:textSize="14sp"
             android:background="@drawable/button_outline"
-            android:textColor="#2196F3"
+            android:textColor="@color/primary_color"
             android:paddingVertical="10dp"/>
     </LinearLayout>
 
@@ -121,7 +121,7 @@
                     android:layout_height="match_parent"
                     android:text="📭 Нет транзакций\n\nНажмите '+' на главной чтобы добавить первую запись"
                     android:textSize="16sp"
-                    android:textColor="#757575"
+                    android:textColor="@color/text_hint"
                     android:gravity="center"
                     android:padding="50dp"
                     android:visibility="gone"/>

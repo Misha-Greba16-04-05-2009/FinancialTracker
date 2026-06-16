@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="@color/background">
 
     <!-- Заголовок -->
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#2196F3"
+        android:background="@color/primary_color"
         android:elevation="4dp">
 
         <TextView
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:text="💸 Переводы между счетами"
             android:textSize="20sp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textStyle="bold"/>
 
     </androidx.appcompat.widget.Toolbar>
@@ -28,18 +28,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:background="#FFFFFF"
+        android:background="@color/card_background"
         android:elevation="2dp">
 
         <Button
             android:id="@+id/newTransferButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="➕ Новый перевод"
-            android:textSize="16sp"
             android:background="@drawable/button_primary"
-            android:textColor="#FFFFFF"
-            android:padding="12dp"/>
+            android:padding="12dp"
+            android:text="➕ Новый перевод"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
     </LinearLayout>
 
     <!-- Индикатор загрузки -->
@@ -55,15 +57,17 @@
         <ProgressBar
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:indeterminate="true"/>
+            android:indeterminate="true"
+            android:indeterminateTint="@color/primary_color"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Загрузка переводов..."
             android:textSize="14sp"
-            android:textColor="#757575"
+            android:textColor="@color/text_hint"
             android:layout_marginTop="16dp"/>
+
     </LinearLayout>
 
     <!-- Пустое состояние -->
@@ -74,7 +78,7 @@
         android:layout_weight="1"
         android:text="📭 Нет переводов\n\nНажмите 'Новый перевод' чтобы создать первый"
         android:textSize="16sp"
-        android:textColor="#757575"
+        android:textColor="@color/text_hint"
         android:gravity="center"
         android:padding="50dp"
         android:visibility="gone"/>
@@ -86,6 +90,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="16dp"
+        android:clipToPadding="false"
         android:visibility="visible"/>
 
 </LinearLayout>

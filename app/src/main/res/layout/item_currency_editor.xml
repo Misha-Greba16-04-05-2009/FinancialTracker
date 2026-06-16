@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="2dp">
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/card_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +28,7 @@
                 android:text="$ USD"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="#333333"/>
+                android:textColor="@color/text_primary"/>
 
             <TextView
                 android:id="@+id/currencyNameText"
@@ -36,7 +37,7 @@
                 android:layout_weight="1"
                 android:text="Доллар США"
                 android:textSize="14sp"
-                android:textColor="#666666"
+                android:textColor="@color/text_secondary"
                 android:layout_marginStart="8dp"/>
 
             <TextView
@@ -46,7 +47,7 @@
                 android:text="+0.00%"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:textColor="#4CAF50"/>
+                android:textColor="@color/success_color"/>
 
         </LinearLayout>
 
@@ -57,7 +58,7 @@
             android:layout_height="wrap_content"
             android:text="ЦБ: 77.1880"
             android:textSize="12sp"
-            android:textColor="#757575"
+            android:textColor="@color/text_hint"
             android:layout_marginBottom="8dp"/>
 
         <!-- Редактирование курса -->
@@ -70,36 +71,43 @@
             <EditText
                 android:id="@+id/rateEditText"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:text="77.1880"
                 android:inputType="numberDecimal"
-                android:background="@drawable/spinner_background"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_hint"
+                android:background="@drawable/edit_text_background_custom"
                 android:padding="8dp"
                 android:layout_marginEnd="8dp"/>
 
-            <Button
-                android:id="@+id/resetButton"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="↺"
-                android:textSize="16sp"
-                android:background="@drawable/button_outline_small"
-                android:textColor="#2196F3"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="4dp"
-                android:layout_marginEnd="4dp"/>
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/deleteButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@drawable/button_danger_small"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="4dp"
-                android:text="✕"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp" />
+                <Button
+                    android:id="@+id/resetButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:text="↺"
+                    android:textSize="20sp"
+                    android:textAllCaps="false"
+                    android:background="@drawable/button_outline"
+                    android:textColor="@color/primary_color"
+                    android:layout_marginEnd="4dp"/>
+
+                <Button
+                    android:id="@+id/deleteButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:text="✕"
+                    android:textSize="18sp"
+                    android:textAllCaps="false"
+                    android:background="@drawable/button_danger"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

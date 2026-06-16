@@ -9,14 +9,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Заголовок -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="➕ Создать бюджет"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#333333"
+            android:textColor="@color/text_primary"
             android:gravity="center"
             android:layout_marginBottom="20dp"/>
 
@@ -26,15 +25,14 @@
             android:layout_height="wrap_content"
             android:text="Категория *"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <Spinner
             android:id="@+id/categorySpinner"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/spinner_background"
-            android:padding="8dp"
+            android:background="@drawable/spinner_background_custom"
             android:layout_marginBottom="16dp"/>
 
         <!-- Сумма бюджета -->
@@ -43,7 +41,7 @@
             android:layout_height="wrap_content"
             android:text="Сумма бюджета (руб.) *"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <EditText
@@ -52,7 +50,9 @@
             android:layout_height="48dp"
             android:hint="Например: 10000"
             android:inputType="numberDecimal"
-            android:background="@drawable/spinner_background"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            android:background="@drawable/edit_text_background_custom"
             android:padding="12dp"
             android:layout_marginBottom="16dp"/>
 
@@ -62,15 +62,14 @@
             android:layout_height="wrap_content"
             android:text="Период *"
             android:textSize="14sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <Spinner
             android:id="@+id/periodSpinner"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/spinner_background"
-            android:padding="8dp"
+            android:background="@drawable/spinner_background_custom"
             android:layout_marginBottom="16dp"/>
 
         <!-- Контейнер для произвольных дат -->
@@ -87,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:text="Дата начала"
                 android:textSize="14sp"
-                android:textColor="#333333"
+                android:textColor="@color/text_secondary"
                 android:layout_marginBottom="4dp"/>
 
             <LinearLayout
@@ -107,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:text="Выберите дату начала"
                     android:textSize="14sp"
-                    android:textColor="#333333"/>
+                    android:textColor="@color/text_primary"/>
             </LinearLayout>
 
             <TextView
@@ -115,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:text="Дата окончания"
                 android:textSize="14sp"
-                android:textColor="#333333"
+                android:textColor="@color/text_secondary"
                 android:layout_marginBottom="4dp"/>
 
             <LinearLayout
@@ -135,18 +134,17 @@
                     android:layout_height="wrap_content"
                     android:text="Выберите дату окончания"
                     android:textSize="14sp"
-                    android:textColor="#333333"/>
+                    android:textColor="@color/text_primary"/>
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Подсказка -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="* - обязательные поля"
             android:textSize="12sp"
-            android:textColor="#666666"
+            android:textColor="@color/text_hint"
             android:layout_marginBottom="8dp"/>
 
     </LinearLayout>

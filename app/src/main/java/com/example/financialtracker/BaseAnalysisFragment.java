@@ -1,5 +1,6 @@
 package com.example.financialtracker;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
     protected TextView titleTextView;
     protected TextView addCategoryText;
     protected androidx.cardview.widget.CardView addCategoryButton;
+    protected androidx.cardview.widget.CardView manageCategoriesButton;
 
     protected MainActivity mainActivity;
     protected int selectedYear = -1;
@@ -69,7 +71,6 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
         setupSpinners();
         setupListeners();
 
-        // Устанавливаем текущий год и месяц
         Calendar calendar = Calendar.getInstance();
         selectedYear = calendar.get(Calendar.YEAR);
         selectedMonth = calendar.get(Calendar.MONTH) + 1;
@@ -89,23 +90,20 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
         titleTextView = view.findViewById(R.id.titleTextView);
         addCategoryText = view.findViewById(R.id.addCategoryText);
         addCategoryButton = view.findViewById(R.id.addCategoryButton);
+        manageCategoriesButton = view.findViewById(R.id.manageCategoriesButton);
 
-        // Устанавливаем заголовок
         titleTextView.setText(getTitleText());
         titleTextView.setTextColor(getPrimaryColor());
 
-        // Настраиваем кнопку добавления категории
         addCategoryText.setText(getCategoryTypeText());
         addCategoryButton.setCardBackgroundColor(getPrimaryColor());
 
-        // Настраиваем заголовок статистики
         summaryTitle.setText("📊 " + (isIncomeAnalysis() ? "Статистика доходов" : "Статистика расходов"));
     }
 
     protected void setupSpinners() {
         if (mainActivity == null) return;
 
-        // Получаем список годов от 2000 до текущего года + 5 лет вперед
         List<String> yearOptions = generateYearOptions();
 
         ArrayAdapter<String> yearAdapter = new ArrayAdapter<>(getContext(),
@@ -113,7 +111,6 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
         yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         yearSpinner.setAdapter(yearAdapter);
 
-        // Устанавливаем текущий год
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         String currentYearStr = String.valueOf(currentYear);
         int position = yearOptions.indexOf(currentYearStr);
@@ -121,7 +118,6 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
             yearSpinner.setSelection(position);
         }
 
-        // Настраиваем спиннер месяцев
         List<String> monthOptions = new ArrayList<>();
         monthOptions.add("Все месяцы");
         for (String month : monthNames) {
@@ -133,9 +129,8 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
         monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         monthSpinner.setAdapter(monthAdapter);
 
-        // Устанавливаем текущий месяц
         if (selectedMonth > 0 && selectedMonth <= 12) {
-            monthSpinner.setSelection(selectedMonth); // 0 = все месяцы, 1-12 = конкретные месяцы
+            monthSpinner.setSelection(selectedMonth);
         }
     }
 
@@ -144,10 +139,8 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
 
-        // Добавляем "Все годы" в начало
         years.add("Все годы");
 
-        // Добавляем года от 2000 до текущего + 5 лет
         for (int year = 2000; year <= currentYear + 5; year++) {
             years.add(String.valueOf(year));
         }
@@ -186,6 +179,10 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
         });
 
         addCategoryButton.setOnClickListener(v -> showAddCategoryDialog());
+
+        if (manageCategoriesButton != null) {
+            manageCategoriesButton.setOnClickListener(v -> showManageCategoriesDialog());
+        }
     }
 
     @Override
@@ -193,7 +190,6 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
         selectedMonth = month;
         selectedYear = year;
 
-        // Обновляем выбор в спиннерах
         if (yearSpinner != null && monthSpinner != null) {
             updateSpinnerSelections();
         }
@@ -202,7 +198,6 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
     }
 
     protected void updateSpinnerSelections() {
-        // Обновляем год
         if (selectedYear != -1) {
             ArrayAdapter<String> yearAdapter = (ArrayAdapter<String>) yearSpinner.getAdapter();
             if (yearAdapter != null) {
@@ -215,10 +210,9 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
                 }
             }
         } else {
-            yearSpinner.setSelection(0); // "Все годы"
+            yearSpinner.setSelection(0);
         }
 
-        // Обновляем месяц
         if (selectedMonth >= 0 && selectedMonth <= 12) {
             monthSpinner.setSelection(selectedMonth);
         }
@@ -328,9 +322,7 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
 
         List<CategoryStats> sortedStats = new ArrayList<>(categoryStats.values());
 
-        Collections.sort(sortedStats, (s1, s2) -> {
-            return Double.compare(s2.amount, s1.amount); // сортировка по убыванию
-        });
+        Collections.sort(sortedStats, (s1, s2) -> Double.compare(s2.amount, s1.amount));
 
         double totalAmount = 0;
         for (CategoryStats stat : sortedStats) {
@@ -354,7 +346,6 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
         categoryLayout.setPadding(20, 16, 20, 16);
         categoryLayout.setBackgroundResource(R.drawable.category_card_background);
 
-        // Верхняя строка: иконка, название и сумма
         LinearLayout topRow = new LinearLayout(getContext());
         topRow.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -362,19 +353,14 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
         ));
         topRow.setOrientation(LinearLayout.HORIZONTAL);
 
-        // Иконка категории
         TextView iconView = new TextView(getContext());
-        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(
-                40,
-                40
-        );
+        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(40, 40);
         iconParams.gravity = android.view.Gravity.CENTER;
         iconView.setLayoutParams(iconParams);
         iconView.setText(stat.getIcon());
         iconView.setTextSize(18);
         iconView.setGravity(android.view.Gravity.CENTER);
 
-        // Название и сумма
         LinearLayout infoLayout = new LinearLayout(getContext());
         LinearLayout.LayoutParams infoParams = new LinearLayout.LayoutParams(
                 0,
@@ -385,7 +371,6 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
         infoLayout.setLayoutParams(infoParams);
         infoLayout.setOrientation(LinearLayout.VERTICAL);
 
-        // Название категории
         TextView nameView = new TextView(getContext());
         nameView.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -396,7 +381,6 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
         nameView.setTypeface(null, Typeface.BOLD);
         nameView.setTextColor(Color.parseColor("#424242"));
 
-        // Сумма
         TextView amountView = new TextView(getContext());
         amountView.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -407,7 +391,6 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
         amountView.setTextColor(getPrimaryColor());
         amountView.setPadding(0, 4, 0, 0);
 
-        // Процент
         TextView percentView = new TextView(getContext());
         LinearLayout.LayoutParams percentParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -428,19 +411,16 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
         topRow.addView(infoLayout);
         topRow.addView(percentView);
 
-        // Детали
         TextView detailsView = new TextView(getContext());
         detailsView.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         ));
-        detailsView.setText(String.format(Locale.getDefault(),
-                "📊 %d операций", stat.count));
+        detailsView.setText(String.format(Locale.getDefault(), "📊 %d операций", stat.count));
         detailsView.setTextSize(12);
         detailsView.setTextColor(Color.parseColor("#757575"));
         detailsView.setPadding(0, 8, 0, 12);
 
-        // Прогресс-бар
         View progressBar = new View(getContext());
         LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(
                 0,
@@ -488,6 +468,55 @@ public abstract class BaseAnalysisFragment extends Fragment implements AnalysisB
 
         builder.setNegativeButton("Отмена", null);
         builder.show();
+    }
+
+    // НОВЫЙ МЕТОД: показать диалог управления категориями
+    protected void showManageCategoriesDialog() {
+        if (getContext() == null) return;
+
+        List<String> categories = mainActivity.getCategoryManager().getAllCategoryNames();
+
+        if (categories.isEmpty()) {
+            Toast.makeText(getContext(), "Нет категорий для управления", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String[] categoryArray = categories.toArray(new String[0]);
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Управление категориями")
+                .setItems(categoryArray, (dialog, which) -> {
+                    String selectedCategory = categoryArray[which];
+                    confirmDeleteCategory(selectedCategory);
+                })
+                .setPositiveButton("Добавить", (dialog, which) -> showAddCategoryDialog())
+                .setNegativeButton("Отмена", null)
+                .show();
+    }
+
+    // НОВЫЙ МЕТОД: подтверждение удаления категории
+    protected void confirmDeleteCategory(String categoryName) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Удаление категории")
+                .setMessage("Вы уверены, что хотите удалить категорию \"" + categoryName + "\"?\n\n" +
+                        "Все транзакции с этой категорией останутся, но будут без категории.")
+                .setPositiveButton("Удалить", (dialog, which) -> {
+                    boolean success;
+                    if (isIncomeAnalysis()) {
+                        success = mainActivity.getCategoryManager().removeIncomeCategoryByName(categoryName);
+                    } else {
+                        success = mainActivity.getCategoryManager().removeExpenseCategoryByName(categoryName);
+                    }
+
+                    if (success) {
+                        Toast.makeText(getContext(), "Категория удалена", Toast.LENGTH_SHORT).show();
+                        updateAnalysis();
+                    } else {
+                        Toast.makeText(getContext(), "Не удалось удалить категорию", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Отмена", null)
+                .show();
     }
 
     protected static class CategoryStats {

@@ -55,7 +55,6 @@ public class CbrCurrencyConverterFragment extends Fragment implements CbrRateMan
             return view;
         }
 
-        // ПОЛУЧАЕМ rateManager ИЗ MainActivity
         rateManager = mainActivity.getRateManager();
         rateManager.addListener(this);
 
@@ -106,7 +105,6 @@ public class CbrCurrencyConverterFragment extends Fragment implements CbrRateMan
         fromSpinner.setAdapter(adapter);
         toSpinner.setAdapter(adapter);
 
-        // Устанавливаем USD -> RUB
         for (int i = 0; i < currencies.size(); i++) {
             if (currencies.get(i).equals("USD")) {
                 fromSpinner.setSelection(i);

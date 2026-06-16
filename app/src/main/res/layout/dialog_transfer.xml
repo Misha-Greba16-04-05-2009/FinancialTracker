@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/dialog_background"
     android:padding="16dp">
 
     <LinearLayout
@@ -9,14 +10,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Заголовок -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="💸 Новый перевод"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#333333"
+            android:textColor="@color/text_primary"
             android:gravity="center"
             android:layout_marginBottom="20dp"/>
 
@@ -26,15 +26,14 @@
             android:layout_height="wrap_content"
             android:text="📤 Со счета"
             android:textSize="14sp"
-            android:textColor="#666666"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <Spinner
             android:id="@+id/fromAccountSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/spinner_background"
-            android:padding="8dp"
+            android:background="@drawable/spinner_background_custom"
             android:layout_marginBottom="16dp"/>
 
         <!-- Счет получателя -->
@@ -43,15 +42,14 @@
             android:layout_height="wrap_content"
             android:text="📥 На счет"
             android:textSize="14sp"
-            android:textColor="#666666"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <Spinner
             android:id="@+id/toAccountSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/spinner_background"
-            android:padding="8dp"
+            android:background="@drawable/spinner_background_custom"
             android:layout_marginBottom="16dp"/>
 
         <!-- Кнопка поменять местами -->
@@ -61,8 +59,9 @@
             android:layout_height="wrap_content"
             android:text="🔄 Поменять счета местами"
             android:textSize="14sp"
+            android:textAllCaps="false"
             android:background="@drawable/button_outline"
-            android:textColor="#2196F3"
+            android:textColor="@color/primary_color"
             android:padding="8dp"
             android:layout_marginBottom="16dp"/>
 
@@ -72,109 +71,28 @@
             android:layout_height="wrap_content"
             android:text="💰 Сумма перевода"
             android:textSize="14sp"
-            android:textColor="#666666"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/amountEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:hint="0.00"
+            android:inputType="numberDecimal"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            android:background="@drawable/edit_text_background_custom"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"/>
 
-            <EditText
-                android:id="@+id/amountEditText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="0.00"
-                android:inputType="numberDecimal"
-                android:background="@drawable/spinner_background"
-                android:padding="12dp"
-                android:layout_marginEnd="8dp"/>
-
-            <TextView
-                android:id="@+id/fromCurrencyText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="RUB"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#2196F3"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="12dp"
-                android:background="@drawable/currency_badge_background"/>
-        </LinearLayout>
-
-        <!-- Информация о конвертации -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/info_background"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp"
-            android:visibility="visible">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="💱 Результат конвертации"
-                android:textSize="12sp"
-                android:textColor="#666666"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:id="@+id/convertedAmountText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="0.00"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#4CAF50"/>
-
-                <TextView
-                    android:id="@+id/toCurrencyText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="RUB"
-                    android:textSize="16sp"
-                    android:textColor="#2196F3"
-                    android:paddingHorizontal="8dp"/>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/rateInfoText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Курс: 1 USD = 91.71 RUB"
-                android:textSize="12sp"
-                android:textColor="#757575"
-                android:layout_marginBottom="4dp"/>
-
-            <TextView
-                android:id="@+id/warningText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="⚠️ Разные валюты - будет применена конвертация по текущему курсу"
-                android:textSize="11sp"
-                android:textColor="#F44336"
-                android:visibility="gone"/>
-        </LinearLayout>
-
-        <!-- Комиссия (опционально) -->
+        <!-- Комиссия -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="💸 Комиссия (необязательно)"
             android:textSize="14sp"
-            android:textColor="#666666"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <EditText
@@ -183,7 +101,9 @@
             android:layout_height="wrap_content"
             android:hint="0.00"
             android:inputType="numberDecimal"
-            android:background="@drawable/spinner_background"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            android:background="@drawable/edit_text_background_custom"
             android:padding="12dp"
             android:layout_marginBottom="16dp"/>
 
@@ -193,7 +113,7 @@
             android:layout_height="wrap_content"
             android:text="📅 Дата перевода"
             android:textSize="14sp"
-            android:textColor="#666666"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <LinearLayout
@@ -213,16 +133,16 @@
                 android:layout_height="wrap_content"
                 android:text="📅 Выберите дату"
                 android:textSize="14sp"
-                android:textColor="#333333"/>
+                android:textColor="@color/text_primary"/>
         </LinearLayout>
 
-        <!-- Описание (опционально) -->
+        <!-- Описание -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="📝 Описание (необязательно)"
             android:textSize="14sp"
-            android:textColor="#666666"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <EditText
@@ -231,17 +151,19 @@
             android:layout_height="wrap_content"
             android:hint="Например: Перевод арендной платы"
             android:inputType="text"
-            android:background="@drawable/spinner_background"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            android:background="@drawable/edit_text_background_custom"
             android:padding="12dp"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Заметки (опционально) -->
+        <!-- Заметки -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="💬 Заметки (необязательно)"
             android:textSize="14sp"
-            android:textColor="#666666"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="4dp"/>
 
         <EditText
@@ -251,19 +173,11 @@
             android:hint="Дополнительная информация"
             android:inputType="textMultiLine"
             android:minLines="2"
-            android:background="@drawable/spinner_background"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            android:background="@drawable/edit_text_background_custom"
             android:padding="12dp"
             android:layout_marginBottom="16dp"/>
-
-        <!-- Предупреждение -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="⚠️ Переводы с конвертацией выполняются по текущему курсу ЦБ РФ"
-            android:textSize="11sp"
-            android:textColor="#FF9800"
-            android:gravity="center"
-            android:layout_marginBottom="8dp"/>
 
     </LinearLayout>
 

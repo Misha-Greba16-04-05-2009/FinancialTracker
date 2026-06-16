@@ -82,7 +82,6 @@ public class BudgetsFragment extends Fragment {
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         filterSpinner = view.findViewById(R.id.filterSpinner);
 
-        // Настройка фильтра
         String[] filters = {"Все", "Активные", "Неактивные", "Превышенные", "По категории"};
         ArrayAdapter<String> filterAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, filters);
@@ -163,7 +162,6 @@ public class BudgetsFragment extends Fragment {
             }
         }
 
-        // Сортируем: сначала превышенные, потом активные, потом остальные
         Collections.sort(filtered, (b1, b2) -> {
             if (b1.isExceeded() && !b2.isExceeded()) return -1;
             if (!b1.isExceeded() && b2.isExceeded()) return 1;
@@ -213,7 +211,6 @@ public class BudgetsFragment extends Fragment {
         budgetLayout.setBackgroundResource(R.drawable.card_background);
         budgetLayout.setClickable(true);
 
-        // Верхняя строка: категория и статус
         LinearLayout topRow = new LinearLayout(getContext());
         topRow.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -241,7 +238,6 @@ public class BudgetsFragment extends Fragment {
         topRow.addView(categoryView);
         topRow.addView(statusView);
 
-        // Вторая строка: суммы
         LinearLayout amountRow = new LinearLayout(getContext());
         amountRow.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -289,7 +285,6 @@ public class BudgetsFragment extends Fragment {
         amountRow.addView(limitView);
         amountRow.addView(percentageView);
 
-        // Прогресс-бар
         LinearLayout progressContainer = new LinearLayout(getContext());
         progressContainer.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -310,7 +305,6 @@ public class BudgetsFragment extends Fragment {
 
         progressContainer.addView(progressBar);
 
-        // Нижняя строка: период и остаток
         LinearLayout bottomRow = new LinearLayout(getContext());
         bottomRow.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -345,7 +339,6 @@ public class BudgetsFragment extends Fragment {
         budgetLayout.addView(progressContainer);
         budgetLayout.addView(bottomRow);
 
-        // Обработчик клика
         budgetLayout.setOnClickListener(v -> showBudgetActionsDialog(budget));
 
         budgetsContainer.addView(budgetLayout);
@@ -473,24 +466,20 @@ public class BudgetsFragment extends Fragment {
         final LinearLayout startDateLayout = dialogView.findViewById(R.id.startDateLayout);
         final LinearLayout endDateLayout = dialogView.findViewById(R.id.endDateLayout);
 
-        // Скрываем выбор категории при редактировании
         View categorySpinner = dialogView.findViewById(R.id.categorySpinner);
         if (categorySpinner != null) {
             categorySpinner.setVisibility(View.GONE);
         }
 
-        // Устанавливаем текущие значения
         amountInput.setText(String.valueOf(budget.getAmount()));
 
-        // Настраиваем спиннер периодов
         String[] periods = {"Неделя", "Месяц", "Год", "Произвольный период"};
         ArrayAdapter<String> periodAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, periods);
         periodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         periodSpinner.setAdapter(periodAdapter);
 
-        // Устанавливаем текущий период
-        int periodPosition = 1; // Месяц по умолчанию
+        int periodPosition = 1;
         switch (budget.getPeriod()) {
             case "неделя":
                 periodPosition = 0;
@@ -508,7 +497,6 @@ public class BudgetsFragment extends Fragment {
         periodSpinner.setSelection(periodPosition);
         customDateLayout.setVisibility(periodPosition == 3 ? View.VISIBLE : View.GONE);
 
-        // Устанавливаем даты
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         final Date[] startDate = {budget.getStartDate()};
         final Date[] endDate = {budget.getEndDate()};
@@ -625,7 +613,6 @@ public class BudgetsFragment extends Fragment {
         final LinearLayout startDateLayout = dialogView.findViewById(R.id.startDateLayout);
         final LinearLayout endDateLayout = dialogView.findViewById(R.id.endDateLayout);
 
-        // Настраиваем спиннер категорий расходов
         CategoryManager categoryManager = mainActivity.getCategoryManager();
         List<String> expenseCategories = categoryManager.getExpenseCategories();
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(getContext(),
@@ -633,14 +620,12 @@ public class BudgetsFragment extends Fragment {
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryAdapter);
 
-        // Настраиваем спиннер периодов
         String[] periods = {"Неделя", "Месяц", "Год", "Произвольный период"};
         ArrayAdapter<String> periodAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, periods);
         periodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         periodSpinner.setAdapter(periodAdapter);
 
-        // Устанавливаем текущие даты
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         final Date[] startDate = {new Date()};
         final Date[] endDate = {new Date()};

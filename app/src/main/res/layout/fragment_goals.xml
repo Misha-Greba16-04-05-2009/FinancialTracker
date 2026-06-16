@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="@color/background">
 
     <!-- Статистика -->
     <androidx.cardview.widget.CardView
@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:cardElevation="4dp"
-        app:cardCornerRadius="8dp">
+        app:cardCornerRadius="8dp"
+        app:cardBackgroundColor="@color/card_background">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,7 +27,7 @@
                 android:text="🎯 Статистика целей"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#333333"
+                android:textColor="@color/text_primary"
                 android:gravity="center"
                 android:layout_marginBottom="12dp"/>
 
@@ -42,7 +43,7 @@
                     android:layout_weight="1"
                     android:text="Всего целей:"
                     android:textSize="14sp"
-                    android:textColor="#666666"/>
+                    android:textColor="@color/text_secondary"/>
 
                 <TextView
                     android:id="@+id/totalGoalsTextView"
@@ -52,7 +53,7 @@
                     android:text="0"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="#FF9800"
+                    android:textColor="@color/primary_color"
                     android:gravity="right"/>
 
             </LinearLayout>
@@ -69,7 +70,7 @@
                     android:layout_weight="1"
                     android:text="Выполнено:"
                     android:textSize="14sp"
-                    android:textColor="#666666"/>
+                    android:textColor="@color/text_secondary"/>
 
                 <TextView
                     android:id="@+id/completedGoalsTextView"
@@ -79,7 +80,7 @@
                     android:text="0"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="#4CAF50"
+                    android:textColor="@color/success_color"
                     android:gravity="right"/>
 
             </LinearLayout>
@@ -96,7 +97,7 @@
                     android:layout_weight="1"
                     android:text="Просрочено:"
                     android:textSize="14sp"
-                    android:textColor="#666666"/>
+                    android:textColor="@color/text_secondary"/>
 
                 <TextView
                     android:id="@+id/overdueGoalsTextView"
@@ -106,7 +107,7 @@
                     android:text="0"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="#F44336"
+                    android:textColor="@color/error_color"
                     android:gravity="right"/>
 
             </LinearLayout>
@@ -114,7 +115,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#E0E0E0"
+                android:background="@color/divider_light"
                 android:layout_marginVertical="12dp"/>
 
             <LinearLayout
@@ -129,7 +130,7 @@
                     android:layout_weight="1"
                     android:text="Целевая сумма:"
                     android:textSize="14sp"
-                    android:textColor="#666666"/>
+                    android:textColor="@color/text_secondary"/>
 
                 <TextView
                     android:id="@+id/totalTargetTextView"
@@ -139,7 +140,7 @@
                     android:text="0 руб."
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="#333333"
+                    android:textColor="@color/text_primary"
                     android:gravity="right"/>
 
             </LinearLayout>
@@ -155,7 +156,7 @@
                     android:layout_weight="1"
                     android:text="Накоплено:"
                     android:textSize="14sp"
-                    android:textColor="#666666"/>
+                    android:textColor="@color/text_secondary"/>
 
                 <TextView
                     android:id="@+id/totalCurrentTextView"
@@ -165,7 +166,7 @@
                     android:text="0 руб."
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="#4CAF50"
+                    android:textColor="@color/success_color"
                     android:gravity="right"/>
 
             </LinearLayout>
@@ -188,8 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/spinner_background"
-            android:padding="8dp"/>
+            android:background="@drawable/spinner_background_custom"/>
 
         <Button
             android:id="@+id/addGoalButton"
@@ -197,7 +197,7 @@
             android:layout_height="wrap_content"
             android:text="🎯 Добавить"
             android:textSize="14sp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:background="@drawable/button_orange"
             android:paddingHorizontal="16dp"
             android:paddingVertical="10dp"/>

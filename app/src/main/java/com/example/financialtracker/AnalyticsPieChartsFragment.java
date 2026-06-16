@@ -241,6 +241,7 @@ public class AnalyticsPieChartsFragment extends Fragment {
         }
 
         periodTitle.setText("Аналитика " + periodText);
+        periodTitle.setTextColor(getResources().getColor(R.color.text_primary));
     }
 
     private void calculateTotalStats(List<Transaction> transactions) {
@@ -262,11 +263,15 @@ public class AnalyticsPieChartsFragment extends Fragment {
         balanceValue.setText(String.format(Locale.getDefault(), "%.2f ₽", balance));
         transactionCountText.setText("Всего операций: " + transactions.size());
 
-        // Устанавливаем цвета
-        totalIncomeValue.setTextColor(Color.parseColor("#4CAF50"));
-        totalExpenseValue.setTextColor(Color.parseColor("#F44336"));
+        // ИСПРАВЛЕНО: используем цвета из ресурсов
+        totalIncomeValue.setTextColor(getResources().getColor(R.color.income_color));
+        totalExpenseValue.setTextColor(getResources().getColor(R.color.expense_color));
         balanceValue.setTextColor(balance >= 0 ?
-                Color.parseColor("#4CAF50") : Color.parseColor("#F44336"));
+                getResources().getColor(R.color.income_color) :
+                getResources().getColor(R.color.expense_color));
+
+        // Текст "Всего операций" тоже должен менять цвет
+        transactionCountText.setTextColor(getResources().getColor(R.color.text_secondary));
     }
 
     private Map<String, Double> analyzeByCategory(List<Transaction> transactions, boolean isIncome) {
@@ -301,7 +306,6 @@ public class AnalyticsPieChartsFragment extends Fragment {
 
         PieDataSet dataSet = new PieDataSet(entries, "Доходы по категориям");
 
-        // Используем зеленые оттенки для доходов
         int[] incomeColors = {
                 Color.parseColor("#4CAF50"), Color.parseColor("#8BC34A"),
                 Color.parseColor("#CDDC39"), Color.parseColor("#FFC107"),
@@ -312,6 +316,7 @@ public class AnalyticsPieChartsFragment extends Fragment {
         dataSet.setColors(incomeColors);
 
         dataSet.setValueTextSize(12f);
+        // ИСПРАВЛЕНО: цвет текста на диаграмме - БЕЛЫЙ
         dataSet.setValueTextColor(Color.WHITE);
         dataSet.setSliceSpace(2f);
         dataSet.setSelectionShift(5f);
@@ -327,7 +332,7 @@ public class AnalyticsPieChartsFragment extends Fragment {
         incomePieChart.setHoleRadius(40f);
         incomePieChart.setTransparentCircleRadius(45f);
         incomePieChart.setDrawEntryLabels(true);
-        incomePieChart.setEntryLabelColor(Color.BLACK);
+        incomePieChart.setEntryLabelColor(Color.WHITE);
         incomePieChart.setEntryLabelTextSize(10f);
         incomePieChart.setData(data);
         incomePieChart.invalidate();
@@ -355,7 +360,6 @@ public class AnalyticsPieChartsFragment extends Fragment {
 
         PieDataSet dataSet = new PieDataSet(entries, "Расходы по категориям");
 
-        // Используем красные оттенки для расходов
         int[] expenseColors = {
                 Color.parseColor("#F44336"), Color.parseColor("#FF5252"),
                 Color.parseColor("#FF7043"), Color.parseColor("#FF8A65"),
@@ -366,6 +370,7 @@ public class AnalyticsPieChartsFragment extends Fragment {
         dataSet.setColors(expenseColors);
 
         dataSet.setValueTextSize(12f);
+        // ИСПРАВЛЕНО: цвет текста на диаграмме - БЕЛЫЙ
         dataSet.setValueTextColor(Color.WHITE);
         dataSet.setSliceSpace(2f);
         dataSet.setSelectionShift(5f);
@@ -381,7 +386,7 @@ public class AnalyticsPieChartsFragment extends Fragment {
         expensePieChart.setHoleRadius(40f);
         expensePieChart.setTransparentCircleRadius(45f);
         expensePieChart.setDrawEntryLabels(true);
-        expensePieChart.setEntryLabelColor(Color.BLACK);
+        expensePieChart.setEntryLabelColor(Color.WHITE);
         expensePieChart.setEntryLabelTextSize(10f);
         expensePieChart.setData(data);
         expensePieChart.invalidate();
@@ -398,6 +403,14 @@ public class AnalyticsPieChartsFragment extends Fragment {
             total += amount;
         }
 
+        // Определяем, какая сейчас тема
+        boolean isDarkTheme = false;
+        if (getContext() != null) {
+            int nightModeFlags = getContext().getResources().getConfiguration().uiMode &
+                    android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+            isDarkTheme = nightModeFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES;
+        }
+
         int index = 0;
         for (Map.Entry<String, Double> entry : data.entrySet()) {
             double percentage = (entry.getValue() / total) * 100;
@@ -408,10 +421,13 @@ public class AnalyticsPieChartsFragment extends Fragment {
                     LinearLayout.LayoutParams.WRAP_CONTENT));
             legendItem.setOrientation(LinearLayout.HORIZONTAL);
             legendItem.setPadding(0, 8, 0, 8);
+            legendItem.setGravity(android.view.Gravity.CENTER_VERTICAL);
 
             // Цветной квадратик
             View colorView = new View(requireContext());
-            colorView.setLayoutParams(new LinearLayout.LayoutParams(24, 24));
+            LinearLayout.LayoutParams colorParams = new LinearLayout.LayoutParams(24, 24);
+            colorParams.setMargins(0, 0, 12, 0);
+            colorView.setLayoutParams(colorParams);
 
             int[] incomeColors = {
                     Color.parseColor("#4CAF50"), Color.parseColor("#8BC34A"),
@@ -435,14 +451,26 @@ public class AnalyticsPieChartsFragment extends Fragment {
                 colorView.setBackgroundColor(expenseColors[index % expenseColors.length]);
             }
 
-            // Название категории
+            // Убираем иконку из названия
+            String categoryName = entry.getKey();
+            if (categoryName.contains(" ")) {
+                categoryName = categoryName.substring(categoryName.indexOf(" ") + 1);
+            }
+
+            // Название категории — цвет в зависимости от темы
             TextView categoryText = new TextView(requireContext());
             categoryText.setLayoutParams(new LinearLayout.LayoutParams(
                     0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
-            categoryText.setText(entry.getKey());
+            categoryText.setText(categoryName);
             categoryText.setTextSize(14);
-            categoryText.setTextColor(Color.BLACK);
-            categoryText.setPadding(12, 0, 0, 0);
+            categoryText.setPadding(0, 0, 8, 0);
+
+            // ГЛАВНОЕ: цвет текста категории — чёрный для светлой темы, белый для тёмной
+            if (isDarkTheme) {
+                categoryText.setTextColor(Color.WHITE);
+            } else {
+                categoryText.setTextColor(Color.BLACK);
+            }
 
             // Сумма и процент
             TextView amountText = new TextView(requireContext());
@@ -451,9 +479,13 @@ public class AnalyticsPieChartsFragment extends Fragment {
                     LinearLayout.LayoutParams.WRAP_CONTENT));
             amountText.setText(String.format(Locale.getDefault(),
                     "%.2f ₽ (%.1f%%)", entry.getValue(), percentage));
-            amountText.setTextSize(14);
-            amountText.setTextColor(isIncome ?
-                    Color.parseColor("#4CAF50") : Color.parseColor("#F44336"));
+            amountText.setTextSize(13);
+
+            if (isIncome) {
+                amountText.setTextColor(getResources().getColor(R.color.income_color));
+            } else {
+                amountText.setTextColor(getResources().getColor(R.color.expense_color));
+            }
 
             legendItem.addView(colorView);
             legendItem.addView(categoryText);
