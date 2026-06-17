@@ -173,13 +173,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void loadFragment(Fragment fragment, String title) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
 
-        drawerLayout.closeDrawer(GravityCompat.START);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+        }
     }
 
     // ============ ИСПРАВЛЕННЫЙ МЕТОД ОБНОВЛЕНИЯ ЗАГОЛОВКА ============
@@ -260,6 +261,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Toast.makeText(this, "Ошибка открытия счетов: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
+            } else if (id == R.id.nav_receipt_scanner) {
+                ReceiptScannerFragment scannerFragment = new ReceiptScannerFragment();
+                loadFragment(scannerFragment, "📷 Сканер чеков");
             } else if (id == R.id.nav_transfers) {
                 TransfersFragment transfersFragment = new TransfersFragment();
                 loadFragment(transfersFragment, "Переводы между счетами");
@@ -562,6 +566,247 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         saveAllData();
     }
 
+    public void openReceiptScannerFromDialog(AlertDialog dialog) {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        ReceiptScannerFragment scannerFragment = new ReceiptScannerFragment();
+        loadFragment(scannerFragment, "📷 Сканер чеков");
+    }
+
+    public void showEnhancedAddTransactionDialogWithData(double amount, String shop, String comment) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_transaction_enhanced, null);
+
+        final TextView dialogTitle = dialogView.findViewById(R.id.dialogTitle);
+        final Button incomeTypeButton = dialogView.findViewById(R.id.incomeTypeButton);
+        final Button expenseTypeButton = dialogView.findViewById(R.id.expenseTypeButton);
+        final Spinner accountSpinner = dialogView.findViewById(R.id.accountSpinner);
+        final Spinner categorySpinner = dialogView.findViewById(R.id.categorySpinner);
+        final EditText newCategoryEditText = dialogView.findViewById(R.id.newCategoryEditText);
+        final Button cashButton = dialogView.findViewById(R.id.cashButton);
+        final Button cardButton = dialogView.findViewById(R.id.cardButton);
+        final Button electronicButton = dialogView.findViewById(R.id.electronicButton);
+        final EditText amountEditText = dialogView.findViewById(R.id.amountEditText);
+        final EditText notesEditText = dialogView.findViewById(R.id.notesEditText);
+        final LinearLayout dateLayout = dialogView.findViewById(R.id.dateLayout);
+        final TextView dateTextView = dialogView.findViewById(R.id.dateTextView);
+        final Button scanReceiptButton = dialogView.findViewById(R.id.scanReceiptButton);
+
+        // Скрываем выбор валюты
+        final Spinner currencySpinner = dialogView.findViewById(R.id.currencySpinner);
+        if (currencySpinner != null) {
+            currencySpinner.setVisibility(View.GONE);
+        }
+
+        final boolean[] currentIsIncome = {false}; // Расход по умолчанию
+        final Date[] selectedDate = {new Date()};
+        final String[] selectedPaymentType = {"Карта"};
+
+        // Заполняем данными из чека
+        if (amount > 0) {
+            amountEditText.setText(String.valueOf(amount));
+        }
+        if (comment != null && !comment.isEmpty()) {
+            notesEditText.setText(comment);
+        }
+
+        updateTypeButtons(incomeTypeButton, expenseTypeButton, currentIsIncome[0]);
+        updatePaymentTypeButtons(cashButton, cardButton, electronicButton, selectedPaymentType[0]);
+        dialogTitle.setText(currentIsIncome[0] ? "📈 Добавить доход" : "📉 Добавить расход");
+
+        loadCategoriesToSpinner(categorySpinner, currentIsIncome[0]);
+        loadAccountsToSpinner(accountSpinner);
+        updateDateTextView(dateTextView, selectedDate[0]);
+
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedCategory = (String) parent.getItemAtPosition(position);
+                boolean isOtherCategory = (selectedCategory != null &&
+                        (selectedCategory.equals("Прочие доходы") || selectedCategory.equals("Прочие расходы")));
+                newCategoryEditText.setVisibility(isOtherCategory ? View.VISIBLE : View.GONE);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        incomeTypeButton.setOnClickListener(v -> {
+            currentIsIncome[0] = true;
+            updateTypeButtons(incomeTypeButton, expenseTypeButton, currentIsIncome[0]);
+            dialogTitle.setText("📈 Добавить доход");
+            loadCategoriesToSpinner(categorySpinner, currentIsIncome[0]);
+        });
+
+        expenseTypeButton.setOnClickListener(v -> {
+            currentIsIncome[0] = false;
+            updateTypeButtons(incomeTypeButton, expenseTypeButton, currentIsIncome[0]);
+            dialogTitle.setText("📉 Добавить расход");
+            loadCategoriesToSpinner(categorySpinner, currentIsIncome[0]);
+        });
+
+        cashButton.setOnClickListener(v -> {
+            selectedPaymentType[0] = "Наличные";
+            updatePaymentTypeButtons(cashButton, cardButton, electronicButton, selectedPaymentType[0]);
+        });
+
+        cardButton.setOnClickListener(v -> {
+            selectedPaymentType[0] = "Карта";
+            updatePaymentTypeButtons(cashButton, cardButton, electronicButton, selectedPaymentType[0]);
+        });
+
+        electronicButton.setOnClickListener(v -> {
+            selectedPaymentType[0] = "Электронные деньги";
+            updatePaymentTypeButtons(cashButton, cardButton, electronicButton, selectedPaymentType[0]);
+        });
+
+        dateLayout.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(selectedDate[0]);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    MainActivity.this,
+                    (view, year, month, dayOfMonth) -> {
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(year, month, dayOfMonth);
+                        selectedDate[0] = cal.getTime();
+                        updateDateTextView(dateTextView, selectedDate[0]);
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            );
+            datePickerDialog.show();
+        });
+
+        // Кнопка сканирования чека
+        scanReceiptButton.setOnClickListener(v -> {
+            if (builder != null) {
+                try {
+                    AlertDialog dialog = builder.create();
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            openReceiptScannerFromDialog(null);
+        });
+
+        builder.setView(dialogView)
+                .setPositiveButton("Добавить", (dialog, which) -> {
+                    try {
+                        String amountStr = amountEditText.getText().toString().trim();
+                        String notes = notesEditText.getText().toString().trim();
+                        String category = (String) categorySpinner.getSelectedItem();
+
+                        String accountDisplay = (String) accountSpinner.getSelectedItem();
+                        String accountName = accountDisplay;
+                        if (accountDisplay != null && accountDisplay.contains(" - ")) {
+                            accountName = accountDisplay.substring(0, accountDisplay.indexOf(" - "));
+                        }
+
+                        if (amountStr.isEmpty()) {
+                            Toast.makeText(MainActivity.this, "Введите сумму", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        double amountValue = Double.parseDouble(amountStr);
+                        if (amountValue <= 0) {
+                            Toast.makeText(MainActivity.this, "Сумма должна быть больше 0", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if (category == null) {
+                            Toast.makeText(MainActivity.this, "Выберите категорию", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if ((category.equals("Прочие доходы") || category.equals("Прочие расходы"))
+                                && !newCategoryEditText.getText().toString().trim().isEmpty()) {
+                            String newCategory = newCategoryEditText.getText().toString().trim();
+                            if (currentIsIncome[0]) {
+                                categoryManager.addIncomeCategory(newCategory);
+                                category = newCategory;
+                            } else {
+                                categoryManager.addExpenseCategory(newCategory);
+                                category = newCategory;
+                            }
+                        }
+
+                        String description = notes.isEmpty() ?
+                                (currentIsIncome[0] ? "Доход" : "Расход") + ": " + category :
+                                notes;
+
+                        Account selectedAccount = null;
+                        List<Account> accounts = dataManager.loadAccounts();
+
+                        for (Account acc : accounts) {
+                            if (acc.getName().equals(accountName)) {
+                                selectedAccount = acc;
+                                break;
+                            }
+                        }
+
+                        if (selectedAccount != null) {
+                            double oldBalance = selectedAccount.getBalance();
+                            if (currentIsIncome[0]) {
+                                selectedAccount.setBalance(oldBalance + amountValue);
+                            } else {
+                                selectedAccount.setBalance(oldBalance - amountValue);
+                            }
+                            dataManager.saveAccounts(accounts);
+                        }
+
+                        Transaction transaction = new Transaction(
+                                description,
+                                amountValue,
+                                currentIsIncome[0],
+                                selectedDate[0],
+                                category,
+                                notes,
+                                accountName,
+                                selectedPaymentType[0]
+                        );
+
+                        transactions.add(0, transaction);
+
+                        if (currentIsIncome[0]) {
+                            totalIncome += amountValue;
+                        } else {
+                            totalExpenses += amountValue;
+                        }
+
+                        recalculateTotalBalance();
+                        saveAllData();
+
+                        runOnUiThread(() -> {
+                            updateNavHeader();
+                            updateFragments();
+                            updateAccountsFragment();
+
+                            String message = String.format(Locale.getDefault(),
+                                    "✅ %s добавлен: %.2f руб.",
+                                    currentIsIncome[0] ? "Доход" : "Расход",
+                                    amountValue);
+
+                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+                        });
+
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(MainActivity.this, "Введите корректную сумму", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(MainActivity.this, "Ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Отмена", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     // ============ ИСПРАВЛЕННЫЙ МЕТОД ДОБАВЛЕНИЯ ТРАНЗАКЦИИ ============
     public void showEnhancedAddTransactionDialog(final boolean isIncome) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -580,6 +825,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final EditText notesEditText = dialogView.findViewById(R.id.notesEditText);
         final LinearLayout dateLayout = dialogView.findViewById(R.id.dateLayout);
         final TextView dateTextView = dialogView.findViewById(R.id.dateTextView);
+        final Button scanReceiptButton = dialogView.findViewById(R.id.scanReceiptButton);
 
         // Скрываем выбор валюты
         final Spinner currencySpinner = dialogView.findViewById(R.id.currencySpinner);
@@ -659,6 +905,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             datePickerDialog.show();
         });
 
+        // ============ КНОПКА СКАНИРОВАНИЯ ЧЕКА ============
+        scanReceiptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Закрываем диалог
+                try {
+                    // Получаем диалог через builder
+                    AlertDialog dialog = builder.create();
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                // Открываем сканер чеков
+                ReceiptScannerFragment scannerFragment = new ReceiptScannerFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, scannerFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
         builder.setView(dialogView)
                 .setPositiveButton("Добавить", (dialog, which) -> {
                     try {
@@ -704,7 +974,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 (currentIsIncome[0] ? "Доход" : "Расход") + ": " + category :
                                 notes;
 
-                        // Получаем выбранный счет
                         Account selectedAccount = null;
                         List<Account> accounts = dataManager.loadAccounts();
 
@@ -715,7 +984,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         }
 
-                        // Обновляем баланс счета
                         if (selectedAccount != null) {
                             double oldBalance = selectedAccount.getBalance();
                             if (currentIsIncome[0]) {
@@ -724,14 +992,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 selectedAccount.setBalance(oldBalance - amount);
                             }
                             dataManager.saveAccounts(accounts);
-
-                            Log.d(TAG, String.format(Locale.getDefault(),
-                                    "Баланс счета %s: %.2f руб. -> %.2f руб.",
-                                    selectedAccount.getName(),
-                                    oldBalance, selectedAccount.getBalance()));
                         }
 
-                        // Создаем транзакцию
                         Transaction transaction = new Transaction(
                                 description,
                                 amount,
@@ -743,27 +1005,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 selectedPaymentType[0]
                         );
 
-                        // Добавляем транзакцию
                         transactions.add(0, transaction);
 
-                        // Обновляем доходы/расходы
                         if (currentIsIncome[0]) {
                             totalIncome += amount;
                         } else {
                             totalExpenses += amount;
                         }
 
-                        // Пересчитываем общий баланс
                         recalculateTotalBalance();
-
-                        // Сохраняем все данные
                         saveAllData();
 
-                        Log.d(TAG, String.format(Locale.getDefault(),
-                                "Транзакция добавлена. Доходы: %.2f, Расходы: %.2f, Баланс: %.2f",
-                                totalIncome, totalExpenses, balance));
-
-                        // Обновляем UI
                         runOnUiThread(() -> {
                             updateNavHeader();
                             updateFragments();

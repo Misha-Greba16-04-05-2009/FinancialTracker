@@ -9,6 +9,11 @@
         android:id="@+id/nav_accounts"
         android:icon="@drawable/ic_accounts"
         android:title="Управление счетами" />
+
+    <item
+        android:id="@+id/nav_receipt_scanner"
+        android:icon="@drawable/ic_camera"
+        android:title="Сканер чеков" />
     
     <item
         android:id="@+id/nav_data"
