@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Сфотографируйте чек или выберите из галереи"
+            android:text="Сфотографируйте чек или QR-код"
             android:textSize="14sp"
             android:textColor="@color/text_secondary"
             android:gravity="center"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="16dp"
-            android:weightSum="2">
+            android:weightSum="3">
 
             <Button
                 android:id="@+id/scanButton"
@@ -50,7 +50,7 @@
                 android:gravity="center"
                 android:background="@drawable/button_primary"
                 android:textColor="@color/white"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="4dp"/>
 
             <Button
                 android:id="@+id/galleryButton"
@@ -63,7 +63,21 @@
                 android:gravity="center"
                 android:background="@drawable/button_orange"
                 android:textColor="@color/white"
-                android:layout_marginStart="8dp"/>
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"/>
+
+            <Button
+                android:id="@+id/scanQrButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:text="📱 QR"
+                android:textSize="14sp"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:background="@drawable/button_success"
+                android:textColor="@color/white"
+                android:layout_marginStart="4dp"/>
 
         </LinearLayout>
 
@@ -178,7 +192,7 @@
                 android:id="@+id/addTransactionButton"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
-                android:text="➕ Добавить расход"
+                android:text="✅ Использовать в транзакции"
                 android:textSize="14sp"
                 android:textAllCaps="false"
                 android:gravity="center"

@@ -177,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
         }
@@ -905,32 +904,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             datePickerDialog.show();
         });
 
-        // ============ КНОПКА СКАНИРОВАНИЯ ЧЕКА ============
+        // ============ ИСПРАВЛЕННАЯ КНОПКА СКАНИРОВАНИЯ ============
+        // Сохраняем ссылку на диалог в переменную
+        final AlertDialog[] dialogHolder = new AlertDialog[1];
+
         scanReceiptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Закрываем диалог
-                try {
-                    // Получаем диалог через builder
-                    AlertDialog dialog = builder.create();
-                    if (dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                Log.d("SCAN_BUTTON", "Кнопка нажата!");
+                Toast.makeText(MainActivity.this, "Открываем сканер...", Toast.LENGTH_SHORT).show();
+
+                if (dialogHolder[0] != null && dialogHolder[0].isShowing()) {
+                    dialogHolder[0].dismiss();
                 }
 
-                // Открываем сканер чеков
                 ReceiptScannerFragment scannerFragment = new ReceiptScannerFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, scannerFragment)
                         .addToBackStack(null)
                         .commit();
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle("📷 Сканер чеков");
+                }
             }
         });
 
         builder.setView(dialogView)
-                .setPositiveButton("Добавить", (dialog, which) -> {
+                .setPositiveButton("Добавить", (dialogInterface, which) -> {
                     try {
                         String amountStr = amountEditText.getText().toString().trim();
                         String notes = notesEditText.getText().toString().trim();
@@ -1038,7 +1038,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 })
                 .setNegativeButton("Отмена", null);
 
+        // Создаём и показываем диалог
         AlertDialog dialog = builder.create();
+        dialogHolder[0] = dialog;
         dialog.show();
     }
 
