@@ -428,6 +428,7 @@ public class DataFragment extends Fragment {
 
         for (Transaction transaction : toRemove) {
             allTransactions.remove(transaction);
+            mainActivity.applyTransactionToAccount(transaction, true); // возвращаем деньги на счёт
 
             // Корректируем доходы/расходы
             if (transaction.isIncome()) {
@@ -509,6 +510,7 @@ public class DataFragment extends Fragment {
     private void deleteTransaction(Transaction transaction) {
         List<Transaction> allTransactions = mainActivity.getTransactions();
         allTransactions.remove(transaction);
+        mainActivity.applyTransactionToAccount(transaction, true); // возвращаем деньги на счёт
 
         if (transaction.isIncome()) {
             mainActivity.updateTotalIncome(mainActivity.getTotalIncome() - transaction.getAmount());

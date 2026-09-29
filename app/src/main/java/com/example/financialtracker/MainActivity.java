@@ -267,7 +267,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 TransfersFragment transfersFragment = new TransfersFragment();
                 loadFragment(transfersFragment, "Переводы между счетами");
             } else if (id == R.id.nav_currencies) {
-                CbrCurrencyConverterFragment converterFragment = new CbrCurrencyConverterFragment();
+                // Новый конвертер: все валюты ЦБ РФ с актуальными курсами
+                AllCurrenciesConverterFragment converterFragment = new AllCurrenciesConverterFragment();
                 loadFragment(converterFragment, "💱 Конвертер валют");
             } else if (id == R.id.nav_rate_editor) {
                 CurrencyRateEditorFragment editorFragment = new CurrencyRateEditorFragment();
@@ -1195,6 +1196,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void addTransaction(Transaction transaction) {
         transactions.add(0, transaction);
 
+        // Меняем баланс выбранного счёта (раньше транзакции с главного экрана его не трогали)
+        applyTransactionToAccount(transaction, false);
+
         if (transaction.isIncome()) {
             totalIncome += transaction.getAmount();
         } else {
@@ -1207,7 +1211,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         saveAllData();
         updateFragments();
         updateNavHeader();
+        updateAccountsFragment();
         showTransactionAddedNotification(transaction);
+    }
+
+    /**
+     * Проводит операцию по счёту: доход увеличивает баланс, расход уменьшает.
+     * revert = true — откатить (при удалении операции).
+     */
+    public void applyTransactionToAccount(Transaction transaction, boolean revert) {
+        if (transaction == null || dataManager == null) return;
+        double delta = transaction.isIncome() ? transaction.getAmount() : -transaction.getAmount();
+        if (revert) delta = -delta;
+        dataManager.changeAccountBalance(transaction.getAccountName(), delta);
     }
 
     private void showTransactionAddedNotification(Transaction transaction) {
@@ -1234,25 +1250,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void openFilePicker() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("application/json");
-        startActivityForResult(intent, 1001);
+        intent.setType("*/*"); // некоторые файловые менеджеры не отдают .json как application/json
+        startActivityForResult(intent, REQUEST_IMPORT);
     }
+
+    private static final int REQUEST_EXPORT = 1001;
+    private static final int REQUEST_IMPORT = 1002;
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1001) {
-            if (resultCode == RESULT_OK && data != null) {
-                Uri uri = data.getData();
-                if (uri != null) {
-                    boolean success = backupManager.saveExportData(uri);
-                    if (success) {
-                        Toast.makeText(this, "✅ Данные экспортированы", Toast.LENGTH_SHORT).show();
-                    }
-                }
+        if (resultCode != RESULT_OK || data == null || data.getData() == null) return;
+        Uri uri = data.getData();
+
+        if (requestCode == REQUEST_EXPORT) {
+            if (backupManager.saveExportData(uri)) {
+                Toast.makeText(this, "✅ Данные экспортированы", Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == REQUEST_IMPORT) {
+            // Раньше импорт использовал тот же код 1001 и ПЕРЕЗАПИСЫВАЛ выбранный бэкап вместо чтения
+            showImportConfirmDialog(uri);
         }
     }
 
@@ -1333,7 +1352,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 "• Анализ финансовых привычек\n\n" +
 
                 "💱 МУЛЬТИВАЛЮТНОСТЬ\n" +
-                "• Поддерживаемые валюты: RUB, USD, EUR, CNY, AED\n" +
+                "• Все валюты, по которым ЦБ РФ публикует курс\n" +
                 "• Автоматическая конвертация при добавлении транзакций\n" +
                 "• Курсы валют обновляются с сайта ЦБ РФ\n" +
                 "• Возможность ручной корректировки курсов\n\n" +
@@ -1408,8 +1427,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Пересчитываем баланс
             recalculateTotalBalance();
 
+            applyTransactionToAccount(transaction, true);
             transactions.remove(position);
             saveAllData();
+            updateAccountsFragment();
             updateFragments();
             updateNavHeader();
 

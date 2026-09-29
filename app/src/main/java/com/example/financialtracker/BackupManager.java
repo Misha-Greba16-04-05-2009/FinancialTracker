@@ -388,13 +388,11 @@ public class BackupManager {
                     double targetAmount = goalObj.getDouble("targetAmount");
                     double currentAmount = goalObj.getDouble("currentAmount");
 
-                    long deadlineTimestamp = goalObj.getLong("deadline");
-                    Date deadline = new Date(deadlineTimestamp);
+                    // В бэкапе даты записаны строкой — раньше читали как число, и восстановление падало
+                    Date deadline = readDate(goalObj, "deadline");
+                    Date createdDate = readDate(goalObj, "createdDate");
 
-                    long createdTimestamp = goalObj.getLong("createdDate");
-                    Date createdDate = new Date(createdTimestamp);
-
-                    String priority = goalObj.getString("priority");
+                    String priority = goalObj.optString("priority", "Средний");
                     String notes = goalObj.optString("notes", "");
                     boolean completed = goalObj.optBoolean("completed", false);
                     String category = goalObj.optString("category", "");
@@ -437,15 +435,15 @@ public class BackupManager {
                     double spent = budgetObj.getDouble("spent");
                     String period = budgetObj.getString("period");
 
-                    long startTimestamp = budgetObj.getLong("startDate");
-                    Date startDate = new Date(startTimestamp);
-
-                    long endTimestamp = budgetObj.getLong("endDate");
-                    Date endDate = new Date(endTimestamp);
+                    Date startDate = readDate(budgetObj, "startDate");
+                    Date endDate = readDate(budgetObj, "endDate");
 
                     boolean active = budgetObj.optBoolean("active", true);
 
-                    Budget budget = new Budget(category, amount, startDate, endDate);
+                    // Сохраняем тип периода (неделя/месяц/год), а не превращаем всё в "произвольный"
+                    Budget budget = "произвольный".equals(period)
+                            ? new Budget(category, amount, startDate, endDate)
+                            : new Budget(category, amount, period);
                     budget.setSpent(spent);
                     budget.setActive(active);
 
@@ -495,6 +493,25 @@ public class BackupManager {
             e.printStackTrace();
             showToast("❌ Ошибка восстановления: " + e.getMessage());
             return false;
+        }
+    }
+
+    /** Читает дату из бэкапа: строка "dd.MM.yyyy HH:mm:ss", "dd.MM.yyyy" или число миллисекунд. */
+    private Date readDate(JSONObject obj, String key) {
+        if (!obj.has(key) || obj.isNull(key)) return new Date();
+        Object v = obj.opt(key);
+        if (v instanceof Number) return new Date(((Number) v).longValue());
+        String s = String.valueOf(v);
+        String[] patterns = {"dd.MM.yyyy HH:mm:ss", "dd.MM.yyyy"};
+        for (String p : patterns) {
+            try {
+                return new SimpleDateFormat(p, Locale.getDefault()).parse(s);
+            } catch (Exception ignored) { }
+        }
+        try {
+            return new Date(Long.parseLong(s));
+        } catch (Exception e) {
+            return new Date();
         }
     }
 

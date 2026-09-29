@@ -140,13 +140,13 @@ public class HomeFragment extends Fragment {
 
         recentTransactionsContainer.removeAllViews();
 
-        List<Transaction> allTransactions = mainActivity.getTransactions();
-        List<Transaction> recentTransactions = new ArrayList<>();
-
-        int count = Math.min(allTransactions.size(), 5);
-        for (int i = allTransactions.size() - 1; i >= 0 && recentTransactions.size() < count; i--) {
-            recentTransactions.add(allTransactions.get(i));
-        }
+        // Последние 5 операций по дате (раньше показывались самые старые)
+        List<Transaction> sorted = new ArrayList<>(mainActivity.getTransactions());
+        java.util.Collections.sort(sorted, (a, b) -> {
+            if (a.getDate() == null || b.getDate() == null) return 0;
+            return b.getDate().compareTo(a.getDate());
+        });
+        List<Transaction> recentTransactions = new ArrayList<>(sorted.subList(0, Math.min(5, sorted.size())));
 
         if (recentTransactions.isEmpty()) {
             TextView emptyText = new TextView(getContext());
@@ -203,7 +203,7 @@ public class HomeFragment extends Fragment {
         descriptionView.setText(transaction.getDescription());
         descriptionView.setTextSize(14);
         descriptionView.setTypeface(null, Typeface.BOLD);
-        descriptionView.setTextColor(Color.BLACK);
+        descriptionView.setTextColor(getResources().getColor(R.color.text_primary));
 
         TextView categoryView = new TextView(getContext());
         categoryView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -321,7 +321,7 @@ public class HomeFragment extends Fragment {
         ));
         nameView.setText(account.getName());
         nameView.setTextSize(13);
-        nameView.setTextColor(Color.BLACK);
+        nameView.setTextColor(getResources().getColor(R.color.text_primary));
 
         TextView typeView = new TextView(getContext());
         typeView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -329,6 +329,7 @@ public class HomeFragment extends Fragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT
         ));
 
+        typeView.setText(account.getType() + " • " + account.getPaymentType());
         typeView.setTextSize(11);
         typeView.setTextColor(Color.GRAY);
         typeView.setPadding(0, 2, 0, 0);
@@ -516,10 +517,7 @@ public class HomeFragment extends Fragment {
 
     private void markGoalAsCompleted(FinancialGoal goal) {
         goal.setCompleted(true);
-
-        DataManager dataManager = mainActivity.getDataManager();
-        List<FinancialGoal> goals = dataManager.loadGoals();
-        dataManager.saveGoals(goals);
+        mainActivity.getDataManager().completeGoal(goal.getId()); // раньше изменение не сохранялось
 
         Toast.makeText(getContext(),
                 "Цель '" + goal.getName() + "' отмечена как выполненная!",

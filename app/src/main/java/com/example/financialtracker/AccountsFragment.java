@@ -250,7 +250,8 @@ public class AccountsFragment extends Fragment {
             topRow.setOrientation(LinearLayout.HORIZONTAL);
 
             TextView iconView = new TextView(getContext());
-            iconView.setLayoutParams(new LinearLayout.LayoutParams(48, 48));
+            int iconSize = (int) (40 * getResources().getDisplayMetrics().density);
+            iconView.setLayoutParams(new LinearLayout.LayoutParams(iconSize, iconSize));
             iconView.setText(account.getIcon());
             iconView.setTextSize(24);
             iconView.setGravity(android.view.Gravity.CENTER);
@@ -288,6 +289,25 @@ public class AccountsFragment extends Fragment {
             infoLayout.addView(nameView);
             infoLayout.addView(typeView);
 
+            // Движение по счёту: сколько пришло и ушло через операции
+            double in = 0, out = 0;
+            int ops = 0;
+            if (mainActivity != null && mainActivity.getTransactions() != null) {
+                for (Transaction t : mainActivity.getTransactions()) {
+                    if (t != null && account.getName().equals(t.getAccountName())) {
+                        ops++;
+                        if (t.isIncome()) in += t.getAmount(); else out += t.getAmount();
+                    }
+                }
+            }
+            TextView flowView = new TextView(getContext());
+            flowView.setText(ops == 0 ? "Операций пока нет" : String.format(Locale.getDefault(),
+                    "📈 +%.2f  📉 −%.2f  •  %d опер.", in, out, ops));
+            flowView.setTextSize(12);
+            flowView.setTextColor(getResources().getColor(R.color.text_secondary));
+            flowView.setPadding(0, 4, 0, 0);
+            infoLayout.addView(flowView);
+
             LinearLayout balanceLayout = new LinearLayout(getContext());
             balanceLayout.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -306,6 +326,12 @@ public class AccountsFragment extends Fragment {
             balanceView.setTextColor(account.getBalanceColor());
             balanceView.setTypeface(null, android.graphics.Typeface.BOLD);
 
+            TextView balanceLabel = new TextView(getContext());
+            balanceLabel.setText("Баланс");
+            balanceLabel.setTextSize(11);
+            balanceLabel.setTextColor(getResources().getColor(R.color.text_secondary));
+            balanceLabel.setGravity(android.view.Gravity.END);
+            balanceLayout.addView(balanceLabel);
             balanceLayout.addView(balanceView);
             topRow.addView(iconView);
             topRow.addView(infoLayout);
@@ -437,7 +463,7 @@ public class AccountsFragment extends Fragment {
                     double initialBalance = 0.0;
                     if (!balanceStr.isEmpty()) {
                         try {
-                            initialBalance = Double.parseDouble(balanceStr);
+                            initialBalance = Double.parseDouble(balanceStr.replace(',', '.'));
                         } catch (NumberFormatException e) {
                             showError("Некорректная сумма");
                             return;
@@ -513,7 +539,7 @@ public class AccountsFragment extends Fragment {
                         return;
                     }
 
-                    double amount = Double.parseDouble(amountStr);
+                    double amount = Double.parseDouble(amountStr.replace(',', '.'));
                     if (amount <= 0) {
                         showError("Сумма должна быть больше 0");
                         return;
@@ -578,7 +604,7 @@ public class AccountsFragment extends Fragment {
                         return;
                     }
 
-                    double amount = Double.parseDouble(amountStr);
+                    double amount = Double.parseDouble(amountStr.replace(',', '.'));
                     if (amount <= 0) {
                         showError("Сумма должна быть больше 0");
                         return;
@@ -725,7 +751,7 @@ public class AccountsFragment extends Fragment {
                     double balance = 0.0;
                     if (!balanceStr.isEmpty()) {
                         try {
-                            balance = Double.parseDouble(balanceStr);
+                            balance = Double.parseDouble(balanceStr.replace(',', '.'));
                         } catch (NumberFormatException e) {
                             showError("Некорректная сумма");
                             return;

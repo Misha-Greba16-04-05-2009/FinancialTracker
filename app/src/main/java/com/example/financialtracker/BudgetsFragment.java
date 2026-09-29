@@ -116,8 +116,31 @@ public class BudgetsFragment extends Fragment {
             allBudgets = new ArrayList<>();
         }
 
+        recalculateSpent();
         updateStatistics();
         filterBudgets();
+    }
+
+    /**
+     * Пересчитывает "потрачено" по реальным расходам за текущий период бюджета.
+     * Раньше значение нигде не обновлялось, поэтому бюджеты всегда показывали 0.
+     */
+    private void recalculateSpent() {
+        List<Transaction> transactions = mainActivity.getTransactions();
+        for (Budget budget : allBudgets) {
+            budget.refreshCurrentPeriod();
+            double spent = 0;
+            if (transactions != null) {
+                for (Transaction t : transactions) {
+                    if (t == null || t.isIncome()) continue;
+                    if (budget.matchesCategory(t.getCategory()) && budget.containsDate(t.getDate())) {
+                        spent += t.getAmount();
+                    }
+                }
+            }
+            budget.setSpent(spent);
+        }
+        dataManager.saveBudgets(allBudgets);
     }
 
     private void updateStatistics() {
@@ -129,7 +152,7 @@ public class BudgetsFragment extends Fragment {
 
         for (Budget budget : allBudgets) {
             if (budget.isActive()) active++;
-            if (budget.isExceeded()) exceeded++;
+            if (budget.isActive() && budget.isExceeded()) exceeded++;
             totalAmount += budget.getAmount();
             totalSpent += budget.getSpent();
         }
@@ -224,7 +247,7 @@ public class BudgetsFragment extends Fragment {
         categoryView.setText(budget.getCategoryIcon() + " " + budget.getCategoryWithoutIcon());
         categoryView.setTextSize(16);
         categoryView.setTypeface(null, android.graphics.Typeface.BOLD);
-        categoryView.setTextColor(Color.BLACK);
+        categoryView.setTextColor(getResources().getColor(R.color.text_primary));
 
         TextView statusView = new TextView(getContext());
         statusView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -251,7 +274,7 @@ public class BudgetsFragment extends Fragment {
         spentView.setText(String.format(Locale.getDefault(), "%.2f руб.", budget.getSpent()));
         spentView.setTextSize(14);
         spentView.setTextColor(budget.isExceeded() ?
-                Color.parseColor("#F44336") : Color.parseColor("#333333"));
+                Color.parseColor("#F44336") : getResources().getColor(R.color.text_primary));
 
         TextView separatorView = new TextView(getContext());
         separatorView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -291,6 +314,7 @@ public class BudgetsFragment extends Fragment {
                 12
         ));
         progressContainer.setOrientation(LinearLayout.HORIZONTAL);
+        progressContainer.setWeightSum(100f); // без этого полоска всегда была заполнена целиком
         progressContainer.setBackgroundColor(Color.parseColor("#E0E0E0"));
 
         View progressBar = new View(getContext());
@@ -325,7 +349,9 @@ public class BudgetsFragment extends Fragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         ));
-        remainingView.setText("Осталось: " + String.format(Locale.getDefault(), "%.2f руб.", budget.getRemaining()));
+        remainingView.setText(budget.isExceeded()
+                ? "Перерасход: " + String.format(Locale.getDefault(), "%.2f руб.", budget.getSpent() - budget.getAmount())
+                : "Осталось: " + String.format(Locale.getDefault(), "%.2f руб.", budget.getRemaining()));
         remainingView.setTextSize(12);
         remainingView.setTypeface(null, android.graphics.Typeface.BOLD);
         remainingView.setTextColor(budget.getRemaining() > 0 ?
@@ -350,7 +376,6 @@ public class BudgetsFragment extends Fragment {
         String[] options = {
                 "📊 Информация",
                 "✏️ Редактировать",
-                "🔄 Сбросить траты",
                 "⏸️ " + (budget.isActive() ? "Деактивировать" : "Активировать"),
                 "❌ Удалить"
         };
@@ -366,12 +391,9 @@ public class BudgetsFragment extends Fragment {
                     showEditBudgetDialog(budget);
                     break;
                 case 2:
-                    confirmResetBudget(budget);
-                    break;
-                case 3:
                     toggleBudgetActive(budget);
                     break;
-                case 4:
+                case 3:
                     confirmDeleteBudget(budget);
                     break;
             }
@@ -726,9 +748,18 @@ public class BudgetsFragment extends Fragment {
                     newBudget = new Budget(category, amount, budgetPeriod);
                 }
 
+                for (Budget existing : dataManager.loadBudgets()) {
+                    if (existing.getPeriod().equals(newBudget.getPeriod())
+                            && existing.matchesCategory(newBudget.getCategory())) {
+                        Toast.makeText(getContext(), "Бюджет на эту категорию и период уже есть — отредактируйте его",
+                                Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+
                 dataManager.addBudget(newBudget);
                 loadBudgets();
-                Toast.makeText(getContext(), "Бюджет создан", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Бюджет создан. Траты считаются автоматически", Toast.LENGTH_SHORT).show();
 
             } catch (NumberFormatException e) {
                 Toast.makeText(getContext(), "Некорректная сумма", Toast.LENGTH_SHORT).show();

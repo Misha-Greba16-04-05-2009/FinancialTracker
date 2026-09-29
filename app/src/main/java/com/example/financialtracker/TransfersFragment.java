@@ -226,7 +226,7 @@ public class TransfersFragment extends Fragment {
                     return;
                 }
 
-                double amount = Double.parseDouble(amountStr);
+                double amount = Double.parseDouble(amountStr.trim().replace(',', '.'));
                 if (amount <= 0) {
                     Toast.makeText(getContext(), "Сумма должна быть больше 0", Toast.LENGTH_SHORT).show();
                     return;
@@ -235,7 +235,7 @@ public class TransfersFragment extends Fragment {
                 double commission = 0.0;
                 String commissionStr = commissionEditText.getText().toString();
                 if (!commissionStr.isEmpty()) {
-                    commission = Double.parseDouble(commissionStr);
+                    commission = Double.parseDouble(commissionStr.trim().replace(',', '.'));
                 }
 
                 if (fromAccount.getBalance() < amount + commission) {
@@ -304,11 +304,15 @@ public class TransfersFragment extends Fragment {
         new AlertDialog.Builder(getContext(), R.style.CustomAlertDialogStyle)
                 .setTitle("Удаление перевода")
                 .setMessage("Вы уверены, что хотите удалить этот перевод?\n\n" +
-                        "Балансы счетов НЕ будут восстановлены!")
+                        "Деньги вернутся: " + transfer.getFormattedTotalAmount() + " на «" + transfer.getFromAccount()
+                        + "», " + transfer.getFormattedAmount() + " спишется с «" + transfer.getToAccount() + "».")
                 .setPositiveButton("Удалить", (dialog, which) -> {
                     List<Transfer> transfers = dataManager.loadTransfers();
                     transfers.remove(transfer);
                     dataManager.saveTransfers(transfers);
+                    // Откатываем перевод: возвращаем деньги (с комиссией) и списываем с получателя
+                    dataManager.changeAccountBalance(transfer.getFromAccount(), transfer.getTotalAmount());
+                    dataManager.changeAccountBalance(transfer.getToAccount(), -transfer.getAmount());
                     loadTransfers();
                     if (mainActivity != null) {
                         mainActivity.updateNavHeader();

@@ -46,23 +46,80 @@ public class Budget implements Serializable {
     }
 
     private void setDefaultDates() {
-        Calendar calendar = Calendar.getInstance();
-        this.startDate = calendar.getTime();
+        if (period == null) period = "месяц";
+        refreshCurrentPeriod();
+    }
 
+    /**
+     * Для бюджетов "неделя / месяц / год" выставляет текущий календарный период:
+     * неделя — с понедельника по воскресенье, месяц — с 1-го по последнее число, год — с 1 января.
+     * Произвольный период не меняется.
+     */
+    public void refreshCurrentPeriod() {
+        if ("произвольный".equals(period)) return;
+        Calendar start = Calendar.getInstance();
+        start.set(Calendar.HOUR_OF_DAY, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
+        Calendar end = (Calendar) start.clone();
         switch (period) {
-            case "неделя":
-                calendar.add(Calendar.DAY_OF_YEAR, 7);
+            case "неделя": {
+                int diff = (start.get(Calendar.DAY_OF_WEEK) + 5) % 7; // сколько дней прошло с понедельника
+                start.add(Calendar.DAY_OF_MONTH, -diff);
+                end = (Calendar) start.clone();
+                end.add(Calendar.DAY_OF_MONTH, 7);
+                break;
+            }
+            case "год":
+                start.set(Calendar.DAY_OF_YEAR, 1);
+                end = (Calendar) start.clone();
+                end.add(Calendar.YEAR, 1);
                 break;
             case "месяц":
-                calendar.add(Calendar.MONTH, 1);
-                break;
-            case "год":
-                calendar.add(Calendar.YEAR, 1);
-                break;
             default:
-                calendar.add(Calendar.MONTH, 1);
+                start.set(Calendar.DAY_OF_MONTH, 1);
+                end = (Calendar) start.clone();
+                end.add(Calendar.MONTH, 1);
+                break;
         }
-        this.endDate = calendar.getTime();
+        end.add(Calendar.MILLISECOND, -1);
+        this.startDate = start.getTime();
+        this.endDate = end.getTime();
+    }
+
+    /** Попадает ли дата в период бюджета (границы включительно, по целым дням). */
+    public boolean containsDate(Date date) {
+        if (date == null) return false;
+        if (startDate == null || endDate == null) refreshCurrentPeriod();
+        if (startDate == null || endDate == null) return true;
+        Calendar s = Calendar.getInstance();
+        s.setTime(startDate);
+        s.set(Calendar.HOUR_OF_DAY, 0); s.set(Calendar.MINUTE, 0);
+        s.set(Calendar.SECOND, 0); s.set(Calendar.MILLISECOND, 0);
+        Calendar e = Calendar.getInstance();
+        e.setTime(endDate);
+        e.set(Calendar.HOUR_OF_DAY, 23); e.set(Calendar.MINUTE, 59);
+        e.set(Calendar.SECOND, 59); e.set(Calendar.MILLISECOND, 999);
+        long t = date.getTime();
+        return t >= s.getTimeInMillis() && t <= e.getTimeInMillis();
+    }
+
+    /** Сравнение категорий без учёта эмодзи-иконки, регистра и "ё/е". */
+    public boolean matchesCategory(String transactionCategory) {
+        if (transactionCategory == null || category == null) return false;
+        return normalizeCategory(transactionCategory).equals(normalizeCategory(category));
+    }
+
+    private static String normalizeCategory(String c) {
+        String s = c.trim();
+        if (s.contains(" ")) {
+            String first = s.substring(0, s.indexOf(' '));
+            boolean hasLetter = false;
+            for (char ch : first.toCharArray()) if (Character.isLetterOrDigit(ch)) { hasLetter = true; break; }
+            if (!hasLetter) s = s.substring(s.indexOf(' ') + 1); // убираем иконку
+        }
+        return s.toLowerCase(Locale.ROOT).replace('ё', 'е').trim();
     }
 
     // ИСПРАВЛЕННЫЙ МЕТОД

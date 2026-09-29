@@ -189,6 +189,23 @@ public class DataManager {
         saveAccounts(accounts);
     }
 
+    /**
+     * Изменяет баланс счёта по имени на delta (положительное — пополнение, отрицательное — списание).
+     * Возвращает true, если счёт найден.
+     */
+    public boolean changeAccountBalance(String accountName, double delta) {
+        if (accountName == null || accountName.isEmpty() || accountName.equals("Без счета")) return false;
+        List<Account> accounts = loadAccounts();
+        for (Account account : accounts) {
+            if (accountName.equals(account.getName())) {
+                account.setBalance(account.getBalance() + delta);
+                saveAccounts(accounts);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void deleteAccount(Account account) {
         List<Account> accounts = loadAccounts();
         accounts.removeIf(a -> a.getId().equals(account.getId()));
@@ -452,7 +469,7 @@ public class DataManager {
         List<FinancialGoal> goals = loadGoals();
         for (FinancialGoal goal : goals) {
             if (goal.getId().equals(goalId)) {
-                double newAmount = goal.getCurrentAmount() + amount;
+                double newAmount = Math.max(0, goal.getCurrentAmount() + amount); // amount может быть < 0 (снятие)
                 goal.setCurrentAmount(newAmount);
                 Log.d(TAG, "addToGoal: добавлено " + amount + " к цели " + goal.getName());
                 break;

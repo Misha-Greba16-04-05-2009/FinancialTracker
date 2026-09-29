@@ -50,11 +50,10 @@ public class LoginActivity extends AppCompatActivity {
         boolean rememberMe = prefs.getBoolean("remember_me", false);
         if (rememberMe) {
             String savedUsername = prefs.getString("username", "");
-            String savedPassword = prefs.getString("password", "");
-
-            if (!savedUsername.isEmpty() && !savedPassword.isEmpty()) {
+            // Пароль больше не храним в открытом виде — запоминаем только логин
+            prefs.edit().remove("password").apply();
+            if (!savedUsername.isEmpty()) {
                 usernameEditText.setText(savedUsername);
-                passwordEditText.setText(savedPassword);
                 rememberMeCheckBox.setChecked(true);
             }
         }
@@ -101,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                 prefs.edit()
                         .putBoolean("remember_me", true)
                         .putString("username", username)
-                        .putString("password", password)
+                        .remove("password")
                         .apply();
             } else {
                 prefs.edit().clear().apply();

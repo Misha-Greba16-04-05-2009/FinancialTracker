@@ -27,9 +27,9 @@ public class FinancialGoal implements Serializable {
         this.currentAmount = currentAmount;
         this.deadline = deadline;
         this.createdDate = new Date();
-        this.priority = priority;
-        this.notes = notes;
-        this.completed = false;
+        this.priority = priority != null ? priority : "Средний";
+        this.notes = notes != null ? notes : "";
+        this.completed = targetAmount > 0 && currentAmount >= targetAmount;
         this.autoSave = false;
     }
 
@@ -49,10 +49,9 @@ public class FinancialGoal implements Serializable {
 
     public double getCurrentAmount() { return currentAmount; }
     public void setCurrentAmount(double currentAmount) {
-        this.currentAmount = currentAmount;
-        if (this.currentAmount >= this.targetAmount) {
-            this.completed = true;
-        }
+        this.currentAmount = Math.max(0, currentAmount);
+        // Статус "выполнена" следует за суммой в обе стороны
+        this.completed = this.targetAmount > 0 && this.currentAmount >= this.targetAmount;
     }
 
     public Date getDeadline() { return deadline; }
@@ -64,7 +63,7 @@ public class FinancialGoal implements Serializable {
     public String getPriority() { return priority; }
     public void setPriority(String priority) { this.priority = priority; }
 
-    public String getNotes() { return notes; }
+    public String getNotes() { return notes != null ? notes : ""; }
     public void setNotes(String notes) { this.notes = notes; }
 
     public boolean isCompleted() { return completed; }
@@ -98,17 +97,17 @@ public class FinancialGoal implements Serializable {
     }
 
     public int getPriorityColor() {
-        switch (priority) {
+        switch (priority == null ? "" : priority) {
             case "Критический": return 0xFFF44336; // Красный
             case "Высокий": return 0xFFFF9800; // Оранжевый
-            case "Средний": return 0xFFFFEB3B; // Желтый
+            case "Средний": return 0xFF2196F3; // Синий (жёлтый не читался на белом фоне)
             case "Низкий":
             default: return 0xFF4CAF50; // Зеленый
         }
     }
 
     public String getPriorityIcon() {
-        switch (priority) {
+        switch (priority == null ? "" : priority) {
             case "Критический": return "🔥";
             case "Высокий": return "⚠️";
             case "Средний": return "📊";
@@ -128,13 +127,22 @@ public class FinancialGoal implements Serializable {
     }
 
     public boolean isOverdue() {
-        return !completed && new Date().after(deadline);
+        return !completed && deadline != null && new Date().after(deadline);
     }
 
     // ИСПРАВЛЕННЫЙ МЕТОД
     public long getDaysRemaining() {
+        if (deadline == null) return 0;
         long diff = deadline.getTime() - new Date().getTime();
-        return diff / (1000 * 60 * 60 * 24);
+        return (long) Math.ceil(diff / (1000.0 * 60 * 60 * 24));
+    }
+
+    /** Сколько нужно откладывать в месяц, чтобы успеть к сроку. */
+    public double getMonthlyRequired() {
+        long days = getDaysRemaining();
+        if (completed || days <= 0) return 0;
+        double months = Math.max(1.0, days / 30.0);
+        return getRemainingAmount() / months;
     }
 
     public String getDaysText() {

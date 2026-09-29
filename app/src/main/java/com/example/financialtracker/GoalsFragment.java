@@ -242,7 +242,7 @@ public class GoalsFragment extends Fragment {
         nameView.setText(goal.getPriorityIcon() + " " + goal.getName());
         nameView.setTextSize(16);
         nameView.setTypeface(null, android.graphics.Typeface.BOLD);
-        nameView.setTextColor(goal.isCompleted() ? Color.GRAY : Color.BLACK);
+        nameView.setTextColor(goal.isCompleted() ? Color.GRAY : getResources().getColor(R.color.text_primary));
 
         TextView priorityView = new TextView(getContext());
         priorityView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -269,7 +269,7 @@ public class GoalsFragment extends Fragment {
         currentView.setText(String.format(Locale.getDefault(), "%.2f руб.", goal.getCurrentAmount()));
         currentView.setTextSize(14);
         currentView.setTextColor(goal.isCompleted() ?
-                Color.parseColor("#4CAF50") : Color.parseColor("#333333"));
+                Color.parseColor("#4CAF50") : getResources().getColor(R.color.text_primary));
 
         TextView separatorView = new TextView(getContext());
         separatorView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -309,6 +309,7 @@ public class GoalsFragment extends Fragment {
                 12
         ));
         progressContainer.setOrientation(LinearLayout.HORIZONTAL);
+        progressContainer.setWeightSum(100f); // без этого полоска всегда была заполнена целиком
         progressContainer.setBackgroundColor(Color.parseColor("#E0E0E0"));
 
         View progressBar = new View(getContext());
@@ -333,7 +334,11 @@ public class GoalsFragment extends Fragment {
         TextView deadlineView = new TextView(getContext());
         deadlineView.setLayoutParams(new LinearLayout.LayoutParams(0,
                 LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
-        deadlineView.setText("📅 " + goal.getFormattedDeadline() + " • " + goal.getDaysText());
+        String deadlineText = "📅 " + goal.getFormattedDeadline() + " • " + goal.getDaysText();
+        if (!goal.isCompleted() && goal.getMonthlyRequired() > 0) {
+            deadlineText += String.format(Locale.getDefault(), "\n💡 Откладывайте ~%.0f руб./мес", goal.getMonthlyRequired());
+        }
+        deadlineView.setText(deadlineText);
         deadlineView.setTextSize(11);
         deadlineView.setTextColor(goal.isOverdue() ?
                 Color.parseColor("#F44336") : Color.GRAY);
@@ -368,6 +373,9 @@ public class GoalsFragment extends Fragment {
         optionsList.add("📊 Информация");
         optionsList.add("✏️ Редактировать");
         optionsList.add("💰 Добавить средства");
+        if (goal.getCurrentAmount() > 0) {
+            optionsList.add("💸 Снять средства");
+        }
 
         if (!goal.isCompleted()) {
             optionsList.add("✅ Отметить выполненной");
@@ -388,6 +396,8 @@ public class GoalsFragment extends Fragment {
                 showEditGoalDialog(goal);
             } else if (selected.equals("💰 Добавить средства")) {
                 showAddMoneyDialog(goal);
+            } else if (selected.equals("💸 Снять средства")) {
+                showWithdrawDialog(goal);
             } else if (selected.equals("✅ Отметить выполненной")) {
                 confirmCompleteGoal(goal);
             } else if (selected.equals("❌ Удалить")) {
@@ -408,7 +418,8 @@ public class GoalsFragment extends Fragment {
                         "📈 Прогресс: %.1f%%\n\n" +
                         "📅 Дата создания: %s\n" +
                         "📅 Срок: %s\n" +
-                        "⏰ Осталось дней: %d\n\n" +
+                        "⏰ Осталось дней: %d\n" +
+                        "💡 Нужно откладывать: %.0f руб./мес\n\n" +
                         "🎚️ Приоритет: %s\n" +
                         "📌 Статус: %s\n" +
                         "📝 Заметки: %s\n\n" +
@@ -421,6 +432,7 @@ public class GoalsFragment extends Fragment {
                 goal.getFormattedCreatedDate(),
                 goal.getFormattedDeadline(),
                 goal.getDaysRemaining(),
+                goal.getMonthlyRequired(),
                 goal.getPriority(),
                 goal.getProgressStatus(),
                 goal.getNotes().isEmpty() ? "Нет" : goal.getNotes(),
@@ -463,52 +475,123 @@ public class GoalsFragment extends Fragment {
                 .show();
     }
 
-    private void showAddMoneyDialog(final FinancialGoal goal) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("💰 Добавить средства");
-        builder.setMessage("Цель: " + goal.getName() + "\n" +
-                "Текущая сумма: " + String.format(Locale.getDefault(), "%.2f руб.", goal.getCurrentAmount()) + "\n" +
-                "Осталось: " + String.format(Locale.getDefault(), "%.2f руб.", goal.getRemainingAmount()));
+    /** Поле суммы + выбор счёта, с которого списать / на который вернуть деньги. */
+    private LinearLayout buildMoneyDialogView(EditText amountInput, Spinner accountSpinner, String accountLabel) {
+        LinearLayout layout = new LinearLayout(getContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        int pad = (int) (20 * getResources().getDisplayMetrics().density);
+        layout.setPadding(pad, pad / 2, pad, 0);
 
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_money, null);
-        final EditText amountInput = dialogView.findViewById(R.id.amountInput);
+        amountInput.setHint("Сумма, руб.");
+        amountInput.setInputType(android.text.InputType.TYPE_CLASS_NUMBER
+                | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        layout.addView(amountInput);
 
-        builder.setView(dialogView);
+        TextView label = new TextView(getContext());
+        label.setText(accountLabel);
+        label.setPadding(0, pad / 2, 0, 0);
+        label.setTextColor(getResources().getColor(R.color.text_secondary));
+        layout.addView(label);
 
-        builder.setPositiveButton("Добавить", (dialog, which) -> {
-            try {
-                String amountStr = amountInput.getText().toString().trim();
-                if (amountStr.isEmpty()) {
-                    Toast.makeText(getContext(), "Введите сумму", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        List<String> names = new ArrayList<>();
+        names.add("Не связывать со счётом");
+        for (Account a : dataManager.loadAccounts()) {
+            names.add(a.getName() + " - " + a.getFormattedBalance());
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_spinner_item, names);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        accountSpinner.setAdapter(adapter);
+        layout.addView(accountSpinner);
+        return layout;
+    }
 
-                double amount = Double.parseDouble(amountStr);
-                if (amount <= 0) {
-                    Toast.makeText(getContext(), "Сумма должна быть больше 0", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+    private String selectedAccountName(Spinner spinner) {
+        if (spinner.getSelectedItemPosition() <= 0) return null;
+        String item = (String) spinner.getSelectedItem();
+        return item.contains(" - ") ? item.substring(0, item.lastIndexOf(" - ")) : item;
+    }
 
-                dataManager.addToGoal(goal.getId(), amount);
-                loadGoals();
-
-                if (goal.getCurrentAmount() + amount >= goal.getTargetAmount()) {
-                    Toast.makeText(getContext(),
-                            "🎉 Поздравляем! Цель достигнута!",
-                            Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getContext(),
-                            String.format(Locale.getDefault(), "Добавлено %.2f руб.", amount),
-                            Toast.LENGTH_SHORT).show();
-                }
-
-            } catch (NumberFormatException e) {
-                Toast.makeText(getContext(), "Некорректная сумма", Toast.LENGTH_SHORT).show();
+    private Double parseAmount(EditText input) {
+        String str = input.getText().toString().trim().replace(',', '.');
+        if (str.isEmpty()) {
+            Toast.makeText(getContext(), "Введите сумму", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+        try {
+            double v = Double.parseDouble(str);
+            if (v <= 0) {
+                Toast.makeText(getContext(), "Сумма должна быть больше 0", Toast.LENGTH_SHORT).show();
+                return null;
             }
-        });
+            return v;
+        } catch (NumberFormatException e) {
+            Toast.makeText(getContext(), "Некорректная сумма", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
 
-        builder.setNegativeButton("Отмена", null);
-        builder.show();
+    private void showAddMoneyDialog(final FinancialGoal goal) {
+        final EditText amountInput = new EditText(getContext());
+        final Spinner accountSpinner = new Spinner(getContext());
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("💰 Пополнить цель")
+                .setMessage("Цель: " + goal.getName() + "\n" +
+                        "Накоплено: " + String.format(Locale.getDefault(), "%.2f руб.", goal.getCurrentAmount()) + "\n" +
+                        "Осталось: " + String.format(Locale.getDefault(), "%.2f руб.", goal.getRemainingAmount()))
+                .setView(buildMoneyDialogView(amountInput, accountSpinner, "Списать со счёта:"))
+                .setPositiveButton("Добавить", (dialog, which) -> {
+                    Double amount = parseAmount(amountInput);
+                    if (amount == null) return;
+
+                    String accountName = selectedAccountName(accountSpinner);
+                    if (accountName != null) {
+                        dataManager.changeAccountBalance(accountName, -amount);
+                    }
+                    dataManager.addToGoal(goal.getId(), amount);
+                    loadGoals();
+
+                    if (goal.getCurrentAmount() + amount >= goal.getTargetAmount()) {
+                        Toast.makeText(getContext(), "🎉 Поздравляем! Цель достигнута!", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(),
+                                String.format(Locale.getDefault(), "Добавлено %.2f руб.%s", amount,
+                                        accountName != null ? " со счёта «" + accountName + "»" : ""),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Отмена", null)
+                .show();
+    }
+
+    private void showWithdrawDialog(final FinancialGoal goal) {
+        final EditText amountInput = new EditText(getContext());
+        final Spinner accountSpinner = new Spinner(getContext());
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("💸 Снять с цели")
+                .setMessage("Цель: " + goal.getName() + "\n" +
+                        "Накоплено: " + String.format(Locale.getDefault(), "%.2f руб.", goal.getCurrentAmount()))
+                .setView(buildMoneyDialogView(amountInput, accountSpinner, "Вернуть на счёт:"))
+                .setPositiveButton("Снять", (dialog, which) -> {
+                    Double amount = parseAmount(amountInput);
+                    if (amount == null) return;
+                    if (amount > goal.getCurrentAmount()) {
+                        Toast.makeText(getContext(), "На цели нет такой суммы", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    String accountName = selectedAccountName(accountSpinner);
+                    if (accountName != null) {
+                        dataManager.changeAccountBalance(accountName, amount);
+                    }
+                    dataManager.addToGoal(goal.getId(), -amount);
+                    loadGoals();
+                    Toast.makeText(getContext(),
+                            String.format(Locale.getDefault(), "Снято %.2f руб.", amount), Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Отмена", null)
+                .show();
     }
 
     private void showEditGoalDialog(final FinancialGoal goal) {
@@ -584,7 +667,7 @@ public class GoalsFragment extends Fragment {
                     return;
                 }
 
-                double targetAmount = Double.parseDouble(targetStr);
+                double targetAmount = Double.parseDouble(targetStr.replace(',', '.'));
                 if (targetAmount <= 0) {
                     Toast.makeText(getContext(), "Целевая сумма должна быть больше 0", Toast.LENGTH_SHORT).show();
                     return;
@@ -592,7 +675,7 @@ public class GoalsFragment extends Fragment {
 
                 double currentAmount = 0.0;
                 if (!currentStr.isEmpty()) {
-                    currentAmount = Double.parseDouble(currentStr);
+                    currentAmount = Double.parseDouble(currentStr.replace(',', '.'));
                     if (currentAmount < 0) {
                         Toast.makeText(getContext(), "Текущая сумма не может быть отрицательной", Toast.LENGTH_SHORT).show();
                         return;
@@ -687,7 +770,7 @@ public class GoalsFragment extends Fragment {
                     return;
                 }
 
-                double targetAmount = Double.parseDouble(targetStr);
+                double targetAmount = Double.parseDouble(targetStr.replace(',', '.'));
                 if (targetAmount <= 0) {
                     Toast.makeText(getContext(), "Целевая сумма должна быть больше 0", Toast.LENGTH_SHORT).show();
                     return;
@@ -695,7 +778,7 @@ public class GoalsFragment extends Fragment {
 
                 double currentAmount = 0.0;
                 if (!currentStr.isEmpty()) {
-                    currentAmount = Double.parseDouble(currentStr);
+                    currentAmount = Double.parseDouble(currentStr.replace(',', '.'));
                     if (currentAmount < 0) {
                         Toast.makeText(getContext(), "Текущая сумма не может быть отрицательной", Toast.LENGTH_SHORT).show();
                         return;

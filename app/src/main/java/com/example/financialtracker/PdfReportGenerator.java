@@ -173,7 +173,10 @@ public class PdfReportGenerator {
             String fileName = "Financial_Report_" + sdf.format(new Date()) + ".pdf";
             fileName = fileName.replace(":", "-").replace(" ", "_");
 
-            File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            // Папка приложения: на Android 10+ запись в общую "Загрузки" без разрешений запрещена
+            File downloadsDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+            if (downloadsDir == null) downloadsDir = context.getFilesDir();
+            if (!downloadsDir.exists()) downloadsDir.mkdirs();
             File file = new File(downloadsDir, fileName);
 
             document.writeTo(new FileOutputStream(file));

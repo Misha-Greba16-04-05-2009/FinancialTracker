@@ -362,19 +362,25 @@ public class StatisticsFragment extends Fragment {
         infoLayout.addView(nameText);
         infoLayout.addView(amountText);
 
-        // Прогресс-бар
+        // Прогресс-бар (раньше лежал в вертикальном контейнере с шириной 0 и не был виден)
+        LinearLayout track = new LinearLayout(getContext());
+        LinearLayout.LayoutParams trackParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 12);
+        trackParams.topMargin = 6;
+        track.setLayoutParams(trackParams);
+        track.setOrientation(LinearLayout.HORIZONTAL);
+        track.setWeightSum(100f);
+        track.setBackgroundColor(Color.parseColor("#E0E0E0"));
+
         View progressBar = new View(getContext());
-        LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(
-                0,
-                6,
-                (float) percentage
-        );
-        progressBar.setLayoutParams(progressParams);
+        progressBar.setLayoutParams(new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.MATCH_PARENT, (float) Math.min(100, percentage)));
         progressBar.setBackgroundColor(mainActivity.getCategoryManager()
                 .getCategoryColor(category, isIncome));
+        track.addView(progressBar);
 
         barLayout.addView(infoLayout);
-        barLayout.addView(progressBar);
+        barLayout.addView(track);
         parent.addView(barLayout);
     }
 }
